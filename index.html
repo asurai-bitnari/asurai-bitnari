@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>오늘의 가능성</title>
+
+<style>
+:root{
+  --ink:#26313d;
+  --muted:#6e7b87;
+  --line:rgba(38,49,61,.14)
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#e8efee;
+  color:var(--ink);
+  font-family:"Noto Sans KR",system-ui,sans-serif
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  -webkit-tap-highlight-color:transparent
+}
+
+.app{
+  width:100%;
+  min-height:100vh;
+  background:linear-gradient(
+    180deg,
+    #eaf2f1,
+    #f7f7f4 58%,
+    #eef0f1
+  );
+  overflow:hidden
+}
+
+.top{
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-bottom:1px solid var(--line);
+  font-size:11px;
+  letter-spacing:.12em
+}
+
+.brand{
+  font-family:Georgia,serif;
+  font-size:15px
+}
+
+.screen{
+  width:min(720px,calc(100% - 28px));
+  margin:22px auto
+}
+
+.game{
+  position:relative;
+  aspect-ratio:1/1;
+  overflow:hidden;
+  background:linear-gradient(
+    180deg,
+    #dcecea 0%,
+    #c5dde2 46%,
+    #91b5c5 100%
+  );
+  box-shadow:0 20px 60px rgba(54,61,72,.13)
+}
+
+.game:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      circle at 50% 8%,
+      rgba(255,255,255,.95),
+      transparent 18%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.08),
+      transparent 45%,
+      rgba(30,67,84,.08)
+    )
+}
+
+.game:after{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:-7%;
+  height:24%;
+  border-radius:50% 50% 0 0;
+  background:rgba(255,255,255,.09);
+  filter:blur(10px);
+  animation:wave 5s ease-in-out infinite
+}
+
+.title{
+  position:absolute;
+  top:7%;
+  left:0;
+  right:0;
+  text-align:center;
+  z-index:6
+}
+
+.title h1{
+  font:400 clamp(25px,6vw,40px) Georgia,serif;
+  margin:0 0 8px
+}
+
+.title p{
+  font-size:11px;
+  color:#667386;
+  margin:0
+}
+
+.progress{
+  position:absolute;
+  right:4%;
+  top:3%;
+  font-size:10px;
+  color:#687689;
+  z-index:7
+}
+
+.fish{
+  position:absolute;
+  width:58px;
+  height:29px;
+  border-radius:70% 45% 45% 70%;
+  cursor:pointer;
+  z-index:5;
+  transition:
+    transform .8s ease,
+    opacity .45s,
+    filter .45s;
+  animation:swim 4.5s ease-in-out infinite
+}
+
+.fish:after{
+  content:"";
+  position:absolute;
+  right:-17px;
+  top:5px;
+  border-width:10px 19px 10px 0;
+  border-style:solid;
+  border-color:
+    transparent
+    rgba(207,226,219,.9)
+    transparent
+    transparent
+}
+
+.fish:before{
+  content:"";
+  position:absolute;
+  right:13px;
+  top:9px;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:1px 0 0 #596a75
+}
+
+.fish.selected{
+  opacity:.9;
+  filter:brightness(1.12);
+  animation:none;
+  transform:translate(0,-80px) scale(.8)
+}
+
+.f1{
+  left:15%;
+  top:31%;
+  background:#f0c7d8;
+  animation-delay:-.4s
+}
+
+.f2{
+  right:16%;
+  top:40%;
+  background:#c9d7f0;
+  animation-delay:-2.1s
+}
+
+.f3{
+  left:24%;
+  top:55%;
+  background:#ead9a5;
+  animation-delay:-1.2s
+}
+
+.f4{
+  right:25%;
+  top:64%;
+  background:#d5c5e7;
+  animation-delay:-3.2s
+}
+
+.f5{
+  left:45%;
+  top:45%;
+  background:#cce4d8;
+  animation-delay:-1.8s
+}
+
+.light{
+  position:absolute;
+  left:35%;
+  top:-7%;
+  width:30%;
+  height:62%;
+  background:linear-gradient(
+    #fff,
+    rgba(255,244,222,.12)
+  );
+  clip-path:polygon(
+    31% 0,
+    69% 0,
+    100% 100%,
+    0 100%
+  );
+  filter:blur(7px);
+  opacity:.7;
+  animation:breathe 4s ease-in-out infinite
+}
+
+.player{
+  position:absolute;
+  left:50%;
+  bottom:9%;
+  width:34px;
+  height:48px;
+  border-radius:50%;
+  background:linear-gradient(
+    160deg,
+    #526d82,
+    #9187ac
+  );
+  transform:translateX(-50%);
+  transition:
+    bottom 1.2s cubic-bezier(.2,.8,.2,1),
+    filter .7s,
+    opacity .7s;
+  z-index:5;
+  box-shadow:0 0 18px rgba(255,255,255,.22)
+}
+
+.player:after{
+  content:"";
+  position:absolute;
+  left:7px;
+  right:7px;
+  bottom:-10px;
+  height:18px;
+  border-radius:50%;
+  background:rgba(255,255,255,.14);
+  filter:blur(5px)
+}
+
+.up1{
+  bottom:24%
+}
+
+.up2{
+  bottom:40%
+}
+
+.up3{
+  bottom:56%;
+  filter:brightness(1.2)
+}
+
+.ripple{
+  position:absolute;
+  width:20px;
+  height:20px;
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:4;
+  animation:ripple .9s ease-out forwards
+}
+
+.message{
+  position:absolute;
+  bottom:5%;
+  left:10%;
+  right:10%;
+  text-align:center;
+  font-size:12px;
+  line-height:1.7;
+  z-index:7
+}
+
+.message strong{
+  display:block;
+  font:400 18px Georgia,serif
+}
+
+.btn{
+  border:1px solid rgba(44,48,64,.2);
+  background:rgba(250,250,248,.8);
+  color:var(--ink);
+  padding:11px 19px;
+  border-radius:999px;
+  font-size:12px;
+  cursor:pointer
+}
+
+.primary{
+  background:#303746;
+  color:white;
+  border-color:#303746
+}
+
+.center{
+  display:flex;
+  justify-content:center;
+  margin-top:14px
+}
+
+.special{
+  display:none;
+  min-height:calc(100vh - 62px);
+  align-items:center;
+  justify-content:center;
+  padding:22px 16px
+}
+
+.special.active{
+  display:flex
+}
+
+.card{
+  width:min(620px,100%);
+  text-align:center;
+  background:rgba(250,250,248,.82);
+  padding:46px 24px;
+  box-shadow:0 20px 55px rgba(54,61,72,.09)
+}
+
+.small{
+  font-size:9px;
+  letter-spacing:.22em;
+  color:var(--muted);
+  margin-bottom:22px
+}
+
+.quote{
+  font:400 clamp(22px,6vw,38px)/1.55 Georgia,serif;
+  margin:0 auto 30px;
+  max-width:520px
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.9;
+  margin-bottom:24px
+}
+
+.guest{
+  display:none
+}
+
+.guest.active{
+  display:block
+}
+
+.guest iframe{
+  width:100%;
+  height:520px;
+  border:0;
+  background:white
+}
+
+.notice{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:9px
+}
+
+.back{
+  margin-top:18px
+}
+
+.rise .game{
+  animation:riseGlow 1.8s ease-in-out
+}
+
+.rise .fish{
+  animation:floatAway 1.5s ease forwards
+}
+
+.rise .player{
+  bottom:78%;
+  filter:brightness(1.5);
+  opacity:.85
+}
+
+@keyframes swim{
+  0%,100%{
+    margin-left:0;
+    transform:translateY(0)
+  }
+
+  50%{
+    margin-left:10px;
+    transform:translateY(-8px)
+  }
+}
+
+@keyframes breathe{
+  0%,100%{
+    opacity:.5;
+    transform:scaleX(.92)
+  }
+
+  50%{
+    opacity:.85;
+    transform:scaleX(1.05)
+  }
+}
+
+@keyframes wave{
+  0%,100%{
+    transform:translateX(-2%) rotate(-1deg)
+  }
+
+  50%{
+    transform:translateX(2%) rotate(1deg)
+  }
+}
+
+@keyframes ripple{
+  to{
+    width:130px;
+    height:130px;
+    opacity:0;
+    transform:translate(-55px,-55px)
+  }
+}
+
+@keyframes riseGlow{
+  0%,100%{
+    filter:brightness(1)
+  }
+
+  50%{
+    filter:brightness(1.28)
+  }
+}
+
+@keyframes floatAway{
+  to{
+    opacity:0;
+    transform:translateY(-100px) scale(.55)
+  }
+}
+
+@media(max-width:600px){
+
+  .top{
+    height:56px;
+    padding:0 15px
+  }
+
+  .screen{
+    width:calc(100% - 16px);
+    margin:14px auto
+  }
+
+  .special{
+    min-height:calc(100vh - 56px);
+    padding:14px 10px
+  }
+
+  .card{
+    padding:38px 18px
+  }
+
+  .guest iframe{
+    height:500px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+<header class="top">
+  <div class="brand">오늘의 가능성</div>
+  <div>01</div>
+</header>
+
+<section class="screen" id="gameScreen">
+
+  <div class="game">
+
+    <div class="title">
+      <h1>빛을 따라</h1>
+      <p>다섯 가지 가능성 중 세 가지를 선택해보세요</p>
+    </div>
+
+    <div class="progress" id="progress">0 / 3</div>
+
+    <div class="light"></div>
+
+    <div class="fish f1" data-word="경험"></div>
+    <div class="fish f2" data-word="기억"></div>
+    <div class="fish f3" data-word="상상"></div>
+    <div class="fish f4" data-word="용기"></div>
+    <div class="fish f5" data-word="시작"></div>
+
+    <div class="player" id="player"></div>
+
+    <div class="message" id="message">
+      <strong>작은 빛을 찾아보세요.</strong>
+      마음이 가는 물고기를 눌러 시작하세요.
+    </div>
+
+  </div>
+
+  <div class="center">
+    <button class="btn" id="reset">다시 시작</button>
+  </div>
+
+</section>
+
+<section class="special" id="possibility">
+
+  <div class="card">
+
+    <div class="small">
+      TODAY'S POSSIBILITY
+    </div>
+
+    <p class="quote" id="quote"></p>
+
+    <p class="sub">
+      오늘 당신에게 도착한<br>
+      작은 가능성입니다.
+    </p>
+
+    <button class="btn primary" id="write">
+      나의 한마디 남기기
+    </button>
+
+    <div class="guest" id="guest">
+
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
+        title="한마디 남기기">
+      </iframe>
+
+      <div class="notice">
+        남겨주신 한마디는 전시 기록으로 소중히 보관됩니다.
+      </div>
+
+      <button class="btn back" id="again">
+        다시 게임하기
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+
+const fish = [
+  ...document.querySelectorAll('.fish')
+];
+
+const player =
+  document.getElementById('player');
+
+const progress =
+  document.getElementById('progress');
+
+const message =
+  document.getElementById('message');
+
+const game =
+  document.querySelector('.game');
+
+const quotes = [
+
+  '아직 선명하지 않은 길도, 당신이 걸어가는 순간 하나의 가능성이 됩니다.',
+
+  '지나온 시간은 사라지지 않고, 언젠가 새로운 빛이 되어 돌아옵니다.',
+
+  '천천히 가도 괜찮아요. 당신의 속도에도 당신만의 빛이 있으니까요.',
+
+  '작은 경험 하나도 언젠가 새로운 꿈의 시작이 될 수 있습니다.',
+
+  '아직 이름 붙이지 못한 마음도 언젠가는 빛날 수 있습니다.',
+
+  '흐릿한 순간에도 당신 안에는 계속 자라고 있는 빛이 있습니다.',
+
+  '오늘의 한 걸음이 내일의 새로운 방향이 될 수 있습니다.',
+
+  '아직 도착하지 않았다는 것은 아직 가능성이 남아 있다는 뜻입니다.',
+
+  '모든 꿈이 같은 모습으로 이루어질 필요는 없습니다.',
+
+  '오늘의 당신이 품은 작은 가능성을 믿어보세요.'
+
+];
+
+let selected = 0;
+let words = [];
+
+
+function finish(){
+
+  document.getElementById(
+    'gameScreen'
+  ).style.display = 'none';
+
+  document.querySelector(
+    '.top'
+  ).style.display = 'none';
+
+  document.getElementById(
+    'possibility'
+  ).classList.add('active');
+
+  let special =
+    words.join(' · ');
+
+  document.getElementById(
+    'quote'
+  ).textContent =
+    quotes[
+      Math.floor(
+        Math.random() * quotes.length
+      )
+    ];
+
+  document.querySelector(
+    '#possibility .sub'
+  ).innerHTML =
+    '당신이 선택한 가능성<br><strong>' +
+    special +
+    '</strong>';
+
+  window.scrollTo(0,0);
+}
+
+
+fish.forEach(f => {
+
+  f.onclick = () => {
+
+    if(
+      f.classList.contains('selected') ||
+      selected >= 3
+    ){
+      return;
+    }
+
+    f.classList.add('selected');
+
+    selected++;
+
+    words.push(
+      f.dataset.word
+    );
+
+    progress.textContent =
+      selected + ' / 3';
+
+
+    let ripple =
+      document.createElement('span');
+
+    ripple.className =
+      'ripple';
+
+    ripple.style.left =
+      (
+        f.offsetLeft +
+        f.offsetWidth / 2 -
+        10
+      ) + 'px';
+
+    ripple.style.top =
+      (
+        f.offsetTop +
+        f.offsetHeight / 2 -
+        10
+      ) + 'px';
+
+    game.appendChild(ripple);
+
+    setTimeout(
+      () => ripple.remove(),
+      900
+    );
+
+
+    player.className =
+      'player up' + selected;
+
+
+    if(selected === 1){
+
+      message.innerHTML =
+        '<strong>' +
+        f.dataset.word +
+        '을 발견했어요.</strong>' +
+        '조금 더 빛을 따라가 보세요.';
+
+    }
+
+    else if(selected === 2){
+
+      message.innerHTML =
+        '<strong>' +
+        f.dataset.word +
+        '이 더해졌어요.</strong>' +
+        '마지막 가능성을 찾아보세요.';
+
+    }
+
+    else{
+
+      message.innerHTML =
+        '<strong>빛에 도착했어요.</strong>' +
+        '당신이 선택한 가능성이 모였습니다.';
+
+      document.body.classList.add(
+        'rise'
+      );
+
+      setTimeout(
+        finish,
+        1600
+      );
+
+    }
+
+  };
+
+});
+
+
+document.getElementById(
+  'reset'
+).onclick = () => {
+
+  selected = 0;
+
+  words = [];
+
+  progress.textContent =
+    '0 / 3';
+
+  player.className =
+    'player';
+
+  document.body.classList.remove(
+    'rise'
+  );
+
+  fish.forEach(f =>
+    f.classList.remove('selected')
+  );
+
+  message.innerHTML =
+    '<strong>작은 빛을 찾아보세요.</strong>' +
+    '마음이 가는 물고기를 눌러 시작하세요.';
+
+};
+
+
+document.getElementById(
+  'write'
+).onclick = () => {
+
+  document.getElementById(
+    'guest'
+  ).classList.add('active');
+
+  document.getElementById(
+    'write'
+  ).style.display = 'none';
+
+};
+
+
+document.getElementById(
+  'again'
+).onclick = () => {
+
+  location.reload();
+
+};
+
+</script>
+
+</main>
+
+</body>
+</html>
