@@ -12,7 +12,9 @@
   --line:rgba(38,49,61,.14)
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box
+}
 
 html,body{
   margin:0;
@@ -31,7 +33,12 @@ body{
 .app{
   width:100%;
   min-height:100vh;
-  background:linear-gradient(180deg,#eaf2f1,#f7f7f4 58%,#eef0f1);
+  background:linear-gradient(
+    180deg,
+    #eaf2f1,
+    #f7f7f4 58%,
+    #eef0f1
+  );
   overflow:hidden
 }
 
@@ -56,45 +63,62 @@ body{
   margin:22px auto
 }
 
+
+/* =========================
+   GAME
+========================= */
+
 .game{
   position:relative;
   aspect-ratio:1/1;
   overflow:hidden;
-  background:linear-gradient(
-    180deg,
-    #dcecea 0%,
-    #c5dde2 46%,
-    #91b5c5 100%
-  );
+
+  background:
+    linear-gradient(
+      180deg,
+      #dcecea 0%,
+      #c5dde2 46%,
+      #91b5c5 100%
+    );
+
   box-shadow:0 20px 60px rgba(54,61,72,.13);
-  transition:background 1.2s ease,transform 1s ease
+
+  transition:
+    background 1.2s ease,
+    transform 1s ease
 }
 
+
+/* 기존보다 훨씬 밝게 */
 .game:before{
   content:"";
   position:absolute;
   inset:0;
+
   background:
     radial-gradient(
       ellipse at 50% 5%,
-      rgba(194,247,255,.36),
+      rgba(194,247,255,.24),
       transparent 34%
     ),
     linear-gradient(
       180deg,
-      rgba(9,73,108,.12),
-      rgba(2,19,43,.38)
+      rgba(9,73,108,.035),
+      rgba(2,19,43,.10)
     ),
     linear-gradient(
       90deg,
-      rgba(255,255,255,.05),
+      rgba(255,255,255,.04),
       transparent 45%,
-      rgba(5,26,48,.14)
+      rgba(5,26,48,.04)
     );
+
   z-index:1;
   pointer-events:none
 }
 
+
+/* 아래쪽 분위기만 살짝 유지 */
 .game:after{
   content:"";
   position:absolute;
@@ -102,15 +126,19 @@ body{
   right:-10%;
   bottom:-7%;
   height:24%;
+
   border-radius:50% 50% 0 0;
+
   background:
     linear-gradient(
       180deg,
-      rgba(169,239,255,.12),
-      rgba(3,26,55,.25)
+      rgba(169,239,255,.10),
+      rgba(3,26,55,.13)
     );
+
   filter:blur(10px);
   animation:wave 5s ease-in-out infinite;
+
   z-index:2;
   pointer-events:none
 }
@@ -124,19 +152,27 @@ body{
     transform:translateY(0) scale(1);
     filter:brightness(1)
   }
+
   35%{
     transform:translateY(-15px) scale(1.018);
     filter:brightness(1.2)
   }
+
   70%{
     transform:translateY(-7px) scale(1.01);
     filter:brightness(1.08)
   }
+
   100%{
     transform:translateY(0) scale(1);
     filter:brightness(1)
   }
 }
+
+
+/* =========================
+   TITLE
+========================= */
 
 .title{
   position:absolute;
@@ -167,13 +203,20 @@ body{
   z-index:10
 }
 
+
+/* =========================
+   VIEWS
+========================= */
+
 .view{
   position:absolute;
   inset:0;
   z-index:3;
   opacity:0;
   pointer-events:none;
-  transition:opacity .7s ease,transform 1s ease
+  transition:
+    opacity .7s ease,
+    transform 1s ease
 }
 
 .view.active{
@@ -181,11 +224,13 @@ body{
   pointer-events:auto
 }
 
-.view2,.view3{
+.view2,
+.view3{
   transform:translateY(55px)
 }
 
-.view2.active,.view3.active{
+.view2.active,
+.view3.active{
   transform:translateY(0)
 }
 
@@ -195,34 +240,51 @@ body{
   transform:translateY(-70px)
 }
 
+
+/* =========================
+   FISH
+========================= */
+
 .fish{
   position:absolute;
+
   width:108px;
   height:76px;
+
   border-radius:0;
   background-color:transparent;
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
+
   cursor:pointer;
+
   z-index:6;
-  filter:drop-shadow(
-    0 7px 8px rgba(61,91,108,.22)
-  );
+
+  filter:
+    drop-shadow(
+      0 7px 8px rgba(61,91,108,.22)
+    );
+
   transition:
     transform .9s cubic-bezier(.2,.8,.2,1),
     opacity .5s,
-    filter .5s
+    filter .5s;
 }
 
-.fish:before{
-  content:none
+
+/* ★ 가장 중요한 부분
+   물고기 이미지를 직접 표시 */
+.fish img{
+  width:100%;
+  height:100%;
+
+  object-fit:contain;
+  display:block;
+
+  pointer-events:none;
+  user-select:none;
 }
 
-.fish:after{
-  content:none
-}
 
+/* 기존 장식 요소 */
 .fish .fin,
 .fish .fin2{
   display:none
@@ -230,23 +292,31 @@ body{
 
 .fish .spark{
   position:absolute;
+
   left:-18px;
   top:12px;
+
   width:5px;
   height:5px;
+
   border-radius:50%;
+
   background:rgba(255,255,255,.8);
+
   box-shadow:
     13px -13px 0 rgba(255,255,255,.45),
     -6px 14px 0 rgba(255,255,255,.35);
+
   animation:sparkle 2s ease-in-out infinite
 }
 
 .fish:hover{
   transform:scale(1.08) rotate(-2deg);
-  filter:drop-shadow(
-    0 10px 13px rgba(61,91,108,.22)
-  )
+
+  filter:
+    drop-shadow(
+      0 10px 13px rgba(61,91,108,.22)
+    )
 }
 
 .fish.selected{
@@ -258,169 +328,208 @@ body{
   transform:scale(.45) translateY(-45px)
 }
 
+
+/* 물고기 위치 */
+
 .f1{
   left:16%;
   top:43%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.2s ease-in-out infinite
 }
 
 .f2{
   left:45%;
   top:35%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.7s ease-in-out -1.2s infinite
 }
 
 .f3{
   right:13%;
   top:50%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.4s ease-in-out -2.3s infinite
 }
 
 .f4{
   left:15%;
   top:52%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.6s ease-in-out -.8s infinite
 }
 
 .f5{
   left:44%;
   top:45%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.1s ease-in-out -1.8s infinite
 }
 
 .f6{
   right:13%;
   top:39%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.9s ease-in-out -2.7s infinite
 }
 
 .f7{
   left:17%;
   top:48%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.5s ease-in-out -1.1s infinite
 }
 
 .f8{
   left:45%;
   top:38%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.3s ease-in-out -2.2s infinite
 }
 
 .f9{
   right:14%;
   top:50%;
-  background:transparent;
-  color:transparent;
   animation:floatFish 4.8s ease-in-out -.5s infinite
 }
+
+
+/* =========================
+   VIEW LABEL
+========================= */
 
 .viewLabel{
   position:absolute;
   top:18%;
   left:0;
   right:0;
+
   text-align:center;
+
   font-size:10px;
   letter-spacing:.16em;
   color:#637687
 }
 
+
+/* =========================
+   LIGHT
+========================= */
+
 .light{
   position:absolute;
+
   left:31%;
   top:-12%;
+
   width:38%;
   height:78%;
+
   background:
     linear-gradient(
       #fff,
       rgba(255,244,222,.12)
     );
-  clip-path:polygon(
-    30% 0,
-    70% 0,
-    100% 100%,
-    0 100%
-  );
+
+  clip-path:
+    polygon(
+      30% 0,
+      70% 0,
+      100% 100%,
+      0 100%
+    );
+
   filter:blur(8px);
+
   opacity:.72;
+
   animation:breathe 4s ease-in-out infinite;
+
   z-index:2
 }
 
+
+/* =========================
+   EYE
+========================= */
+
 .eyeView{
   position:absolute;
+
   left:50%;
   bottom:0;
+
   width:170px;
   height:105px;
+
   transform:translateX(-50%);
+
   z-index:8;
   pointer-events:none
 }
 
 .eyeView:before{
   content:"";
+
   position:absolute;
+
   left:50%;
   bottom:-35px;
+
   width:220px;
   height:100px;
+
   transform:translateX(-50%);
+
   border-radius:50% 50% 0 0;
+
   background:
     radial-gradient(
       ellipse at center,
       rgba(44,71,85,.08),
       transparent 68%
     );
+
   filter:blur(7px)
 }
 
 .eyeView:after{
   content:"";
+
   position:absolute;
+
   left:50%;
   bottom:-18px;
+
   width:85px;
   height:48px;
+
   transform:translateX(-50%);
+
   border-radius:50% 50% 45% 45%;
+
   background:
     linear-gradient(
       160deg,
       rgba(72,96,112,.7),
       rgba(126,112,151,.35)
     );
+
   filter:blur(2px);
-  clip-path:polygon(
-    50% 0,
-    85% 100%,
-    15% 100%
-  )
+
+  clip-path:
+    polygon(
+      50% 0,
+      85% 100%,
+      15% 100%
+    )
 }
+
+
+/* =========================
+   GLOW
+========================= */
 
 .choiceGlow{
   position:absolute;
+
   width:170px;
   height:170px;
+
   border-radius:50%;
+
   background:
     radial-gradient(
       circle,
@@ -428,15 +537,29 @@ body{
       rgba(255,206,238,.15),
       transparent 70%
     );
+
   filter:blur(4px);
+
   opacity:0;
+
   z-index:4;
   pointer-events:none
 }
 
-.g1{left:4%;top:30%}
-.g2{left:42%;top:27%}
-.g3{right:2%;top:34%}
+.g1{
+  left:4%;
+  top:30%
+}
+
+.g2{
+  left:42%;
+  top:27%
+}
+
+.g3{
+  right:2%;
+  top:34%
+}
 
 .game.stage2 .g1,
 .game.stage2 .g2,
@@ -452,30 +575,74 @@ body{
   animation:glowPulse 1.8s ease-in-out infinite
 }
 
+
+/* =========================
+   MESSAGE
+========================= */
+
 .message{
   position:absolute;
+
   bottom:5%;
-  left:10%;
-  right:10%;
+  left:8%;
+  right:8%;
+
   text-align:center;
+
   font-size:12px;
   line-height:1.7;
+
   z-index:12;
-  transition:opacity .4s
+
+  transition:opacity .4s;
+
+  /* ★ 밝은 배경으로 가독성 향상 */
+  color:#26313d;
+
+  background:rgba(255,255,255,.52);
+
+  border:
+    1px solid rgba(255,255,255,.65);
+
+  border-radius:999px;
+
+  padding:9px 14px;
+
+  box-shadow:
+    0 5px 18px rgba(55,75,90,.08);
+
+  backdrop-filter:blur(5px);
+
+  text-shadow:
+    0 1px 5px rgba(255,255,255,.8)
 }
 
 .message strong{
   display:block;
+
   font:400 18px Georgia,serif
 }
 
+
+/* =========================
+   BUTTON
+========================= */
+
 .btn{
-  border:1px solid rgba(44,48,64,.2);
-  background:rgba(250,250,248,.8);
+  border:
+    1px solid rgba(44,48,64,.2);
+
+  background:
+    rgba(250,250,248,.8);
+
   color:var(--ink);
+
   padding:11px 19px;
+
   border-radius:999px;
+
   font-size:12px;
+
   cursor:pointer
 }
 
@@ -491,11 +658,19 @@ body{
   margin-top:14px
 }
 
+
+/* =========================
+   POSSIBILITY / RECORD
+========================= */
+
 .special{
   display:none;
+
   min-height:calc(100vh - 62px);
+
   align-items:center;
   justify-content:center;
+
   padding:22px 16px
 }
 
@@ -505,10 +680,15 @@ body{
 
 .card{
   width:min(620px,100%);
+
   text-align:center;
+
   background:rgba(250,250,248,.82);
+
   padding:46px 24px;
-  box-shadow:0 20px 55px rgba(54,61,72,.09)
+
+  box-shadow:
+    0 20px 55px rgba(54,61,72,.09)
 }
 
 .small{
@@ -520,16 +700,24 @@ body{
 
 .card .possibilityWords{
   display:block;
+
   font-size:12px;
+
   letter-spacing:.08em;
+
   line-height:1.8;
+
   color:#687689;
+
   margin:0 auto 22px
 }
 
 .quote{
-  font:400 clamp(18px,4.2vw,27px)/1.6 Georgia,serif;
+  font:
+    400 clamp(18px,4.2vw,27px)/1.6 Georgia,serif;
+
   margin:0 auto 30px;
+
   max-width:520px
 }
 
@@ -567,11 +755,18 @@ body{
   margin-top:18px
 }
 
+
+/* =========================
+   TRANSITION EFFECTS
+========================= */
+
 .white-flash{
   position:fixed;
   inset:0;
+
   z-index:9999;
   pointer-events:none;
+
   background:
     radial-gradient(
       ellipse at 50% 48%,
@@ -580,8 +775,11 @@ body{
       rgba(255,255,255,.94) 70%,
       #fff 100%
     );
+
   opacity:0;
-  transition:opacity 1.35s ease
+
+  transition:
+    opacity 1.35s ease
 }
 
 .white-flash.on{
@@ -590,15 +788,21 @@ body{
 
 .white-flash.fade-out{
   opacity:0;
-  transition:opacity 1.45s ease
+
+  transition:
+    opacity 1.45s ease
 }
 
 .rainbow{
   position:absolute;
+
   inset:-20%;
+
   z-index:30;
   pointer-events:none;
+
   opacity:0;
+
   background:
     conic-gradient(
       from 180deg,
@@ -610,66 +814,101 @@ body{
       rgba(213,181,255,.52),
       rgba(255,182,211,.0)
     );
+
   filter:blur(18px);
+
   mix-blend-mode:screen
 }
 
 .surface{
   position:absolute;
+
   left:-8%;
   right:-8%;
   top:78%;
+
   height:2px;
+
   background:rgba(255,255,255,.8);
-  box-shadow:0 0 18px rgba(255,255,255,.75);
+
+  box-shadow:
+    0 0 18px rgba(255,255,255,.75);
+
   z-index:25;
+
   opacity:0
 }
 
 .sparkles{
   position:absolute;
   inset:0;
+
   z-index:28;
+
   pointer-events:none
 }
 
 .sparkles i{
   position:absolute;
+
   width:4px;
   height:4px;
+
   border-radius:50%;
+
   background:white;
-  box-shadow:0 0 12px white;
+
+  box-shadow:
+    0 0 12px white;
+
   opacity:0
 }
 
-.s1{left:15%;bottom:15%}
-.s2{left:28%;bottom:28%;animation-delay:.15s}
-.s3{left:43%;bottom:18%;animation-delay:.3s}
-.s4{left:59%;bottom:25%;animation-delay:.45s}
-.s5{left:76%;bottom:16%;animation-delay:.6s}
-.s6{left:84%;bottom:36%;animation-delay:.75s}
-
-.waveLine{
-  position:absolute;
-  left:-10%;
-  right:-10%;
-  height:18px;
-  border-top:1px solid rgba(255,255,255,.48);
-  border-radius:50%;
-  opacity:.35;
-  animation:waveLine 4s ease-in-out infinite;
-  z-index:5
+.s1{
+  left:15%;
+  bottom:15%
 }
 
-.w1{top:67%}
-.w2{top:74%;animation-delay:-1.5s}
-.w3{top:82%;animation-delay:-3s}
+.s2{
+  left:28%;
+  bottom:28%;
+  animation-delay:.15s
+}
+
+.s3{
+  left:43%;
+  bottom:18%;
+  animation-delay:.3s
+}
+
+.s4{
+  left:59%;
+  bottom:25%;
+  animation-delay:.45s
+}
+
+.s5{
+  left:76%;
+  bottom:16%;
+  animation-delay:.6s
+}
+
+.s6{
+  left:84%;
+  bottom:36%;
+  animation-delay:.75s
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
 
 @keyframes floatFish{
   0%,100%{
     transform:translate3d(0,0,0) rotate(0deg)
   }
+
   50%{
     transform:translate3d(10px,-13px,0) rotate(-3deg)
   }
@@ -679,15 +918,22 @@ body{
   0%{
     transform:scale(1)
   }
+
   35%{
     transform:scale(1.16) rotate(-5deg);
-    filter:brightness(1.25)
+
+    filter:
+      brightness(1.25)
       drop-shadow(
         0 0 22px rgba(255,255,255,.8)
       )
   }
+
   100%{
-    transform:translateY(-155px) scale(.72);
+    transform:
+      translateY(-155px)
+      scale(.72);
+
     opacity:0
   }
 }
@@ -697,6 +943,7 @@ body{
     opacity:.25;
     transform:scale(.7)
   }
+
   50%{
     opacity:1;
     transform:scale(1.25)
@@ -708,6 +955,7 @@ body{
     opacity:.45;
     transform:scaleX(.92)
   }
+
   50%{
     opacity:.88;
     transform:scaleX(1.06)
@@ -716,10 +964,15 @@ body{
 
 @keyframes wave{
   0%,100%{
-    transform:translateX(-2%) rotate(-1deg)
+    transform:
+      translateX(-2%)
+      rotate(-1deg)
   }
+
   50%{
-    transform:translateX(2%) rotate(1deg)
+    transform:
+      translateX(2%)
+      rotate(1deg)
   }
 }
 
@@ -728,6 +981,7 @@ body{
     transform:scale(.8);
     opacity:.35
   }
+
   50%{
     transform:scale(1.12);
     opacity:.75
@@ -743,7 +997,13 @@ body{
   }
 }
 
+
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:600px){
+
   .top{
     height:56px;
     padding:0 15px
@@ -773,131 +1033,250 @@ body{
   }
 
   .eyeView{
-    transform:translateX(-50%) scale(.8);
+    transform:
+      translateX(-50%)
+      scale(.8);
+
     transform-origin:bottom center
   }
+
+  .message{
+    left:5%;
+    right:5%;
+    font-size:11px;
+    padding:8px 11px
+  }
+
+  .message strong{
+    font-size:16px
+  }
 }
+
 </style>
 </head>
 
+
 <body>
 
-<div class="white-flash" id="whiteFlash" aria-hidden="true"></div>
+<div
+  class="white-flash"
+  id="whiteFlash"
+  aria-hidden="true">
+</div>
+
 
 <main class="app">
+
 
 <header class="top">
   <div class="brand">오늘의 가능성</div>
   <div id="stageNo">01</div>
 </header>
 
+
 <section class="screen" id="gameScreen">
 
 <div class="game" id="game">
 
+
 <div class="title">
-  <h1 id="gameTitle">빛을 따라</h1>
+
+  <h1 id="gameTitle">
+    빛을 따라
+  </h1>
+
   <p id="gameGuide">
     세 마리 중 마음이 가는 한 마리를 선택해보세요
   </p>
+
 </div>
 
-<div class="progress" id="progress">1 / 3</div>
+
+<div
+  class="progress"
+  id="progress">
+  1 / 3
+</div>
+
 
 <div class="light"></div>
 
-<div class="waveLine w1"></div>
-<div class="waveLine w2"></div>
-<div class="waveLine w3"></div>
 
 <div class="choiceGlow g1"></div>
 <div class="choiceGlow g2"></div>
 <div class="choiceGlow g3"></div>
 
 
-<!-- 1단계 -->
+<!-- =========================
+     STAGE 1
+========================= -->
 
 <div class="view view1 active">
 
-<div class="viewLabel">
-  YOUR FIRST GAZE
+  <div class="viewLabel">
+    YOUR FIRST GAZE
+  </div>
+
+
+  <div
+    class="fish f1"
+    data-word="용기">
+
+    <img
+      src="./f1.png"
+      alt="용기">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f2"
+    data-word="열정">
+
+    <img
+      src="./f2.png"
+      alt="열정">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f3"
+    data-word="호기심">
+
+    <img
+      src="./f3.png"
+      alt="호기심">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
 </div>
 
-<div class="fish f1" data-word="용기">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
 
-<div class="fish f2" data-word="열정">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
-
-<div class="fish f3" data-word="호기심">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
-
-</div>
-
-
-<!-- 2단계 -->
+<!-- =========================
+     STAGE 2
+========================= -->
 
 <div class="view view2">
 
-<div class="viewLabel">
-  A LITTLE CLOSER
+  <div class="viewLabel">
+    A LITTLE CLOSER
+  </div>
+
+
+  <div
+    class="fish f4"
+    data-word="자신감">
+
+    <img
+      src="./f4.png"
+      alt="자신감">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f5"
+    data-word="의지">
+
+    <img
+      src="./f5.png"
+      alt="의지">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f6"
+    data-word="희망">
+
+    <img
+      src="./f6.png"
+      alt="희망">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
 </div>
 
-<div class="fish f4" data-word="자신감">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
 
-<div class="fish f5" data-word="의지">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
-
-<div class="fish f6" data-word="희망">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
-
-</div>
-
-
-<!-- 3단계 -->
+<!-- =========================
+     STAGE 3
+========================= -->
 
 <div class="view view3">
 
-<div class="viewLabel">
-  TOWARD THE SURFACE
-</div>
+  <div class="viewLabel">
+    TOWARD THE SURFACE
+  </div>
 
-<div class="fish f7" data-word="도전">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
 
-<div class="fish f8" data-word="창의성">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
+  <div
+    class="fish f7"
+    data-word="도전">
 
-<div class="fish f9" data-word="끈기">
-  <span class="fin"></span>
-  <span class="fin2"></span>
-  <span class="spark"></span>
-</div>
+    <img
+      src="./f7.png"
+      alt="도전">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f8"
+    data-word="창의성">
+
+    <img
+      src="./f8.png"
+      alt="창의성">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
+
+
+  <div
+    class="fish f9"
+    data-word="끈기">
+
+    <img
+      src="./f9.png"
+      alt="끈기">
+
+    <span class="fin"></span>
+    <span class="fin2"></span>
+    <span class="spark"></span>
+
+  </div>
 
 </div>
 
@@ -908,6 +1287,7 @@ body{
 
 <div class="surface"></div>
 
+
 <div class="sparkles">
   <i class="s1"></i>
   <i class="s2"></i>
@@ -917,283 +1297,373 @@ body{
   <i class="s6"></i>
 </div>
 
-<div class="message" id="message">
-  <strong>작은 빛을 찾아보세요.</strong>
+
+<div
+  class="message"
+  id="message">
+
+  <strong>
+    작은 빛을 찾아보세요.
+  </strong>
+
   내 시선이 머무는 물고기를 눌러 시작하세요.
-</div>
 
 </div>
+
+
+</div>
+
 
 <div class="center">
-  <button class="btn" id="reset">다시 시작</button>
+
+  <button
+    class="btn"
+    id="reset">
+
+    다시 시작
+
+  </button>
+
 </div>
 
 </section>
 
 
-<!-- 가능성 결과 화면 -->
 
-<section class="special" id="possibility">
+<!-- =========================
+     POSSIBILITY SCREEN
+========================= -->
+
+<section
+  class="special"
+  id="possibility">
 
 <div class="card">
 
-<div class="small">
-  YOUR POSSIBILITY
-</div>
+  <div class="small">
+    YOUR POSSIBILITY
+  </div>
 
-<p class="possibilityWords" id="chosenWords">
-  당신이 발견한 가능성
-</p>
 
-<p class="quote" id="quote"></p>
+  <p
+    class="possibilityWords"
+    id="chosenWords">
 
-<p class="sub reminder" id="possibilityReminder">
-  오늘 발견한 당신의 가능성을 기억해주세요.
-</p>
+    당신이 발견한 가능성
 
-<button class="btn primary" id="toRecord">
-  기록 남기기
-</button>
+  </p>
+
+
+  <p
+    class="quote"
+    id="quote">
+  </p>
+
+
+  <p
+    class="sub reminder"
+    id="possibilityReminder">
+
+    오늘 발견한 당신의 가능성을 기억해주세요.
+
+  </p>
+
+
+  <button
+    class="btn primary"
+    id="toRecord">
+
+    기록 남기기
+
+  </button>
 
 </div>
 
 </section>
 
 
-<!-- 기록 화면 -->
 
-<section class="special" id="recordScreen">
+<!-- =========================
+     RECORD SCREEN
+========================= -->
+
+<section
+  class="special"
+  id="recordScreen">
 
 <div class="card">
 
-<div class="small">
-  LEAVE A RECORD
-</div>
+  <div class="small">
+    LEAVE A RECORD
+  </div>
 
-<h2 style="
-font:400 clamp(24px,5vw,34px) Georgia,serif;
-margin:0 0 12px
-">
-오늘의 마음을 남겨주세요
-</h2>
 
-<p class="sub">
-전시를 보며 느낀 점이나 오늘 발견한 가능성에 대한 생각을 자유롭게 기록해주세요.
-</p>
+  <h2
+    style="
+      font:400 clamp(24px,5vw,34px) Georgia,serif;
+      margin:0 0 12px
+    ">
 
-<div class="guest" id="guest">
+    오늘의 마음을 남겨주세요
 
-<iframe
-src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
-title="전시 감상 기록 남기기">
-</iframe>
+  </h2>
 
-<div class="notice">
-남겨주신 한마디는 전시 기록으로 소중히 보관됩니다.
-</div>
 
-</div>
+  <p class="sub">
 
-<button class="btn back" id="backToPossibility">
-가능성 화면으로
-</button>
+    전시를 보며 느낀 점이나
+    오늘 발견한 가능성에 대한 생각을
+    자유롭게 기록해주세요.
 
-<button class="btn back" id="again">
-처음부터 다시하기
-</button>
+  </p>
+
+
+  <div
+    class="guest"
+    id="guest">
+
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
+      title="전시 감상 기록 남기기">
+    </iframe>
+
+    <div class="notice">
+
+      남겨주신 한마디는
+      전시 기록으로 소중히 보관됩니다.
+
+    </div>
+
+  </div>
+
+
+  <button
+    class="btn back"
+    id="backToPossibility">
+
+    가능성 화면으로
+
+  </button>
+
+
+  <button
+    class="btn back"
+    id="again">
+
+    처음부터 다시하기
+
+  </button>
 
 </div>
 
 </section>
+
 
 
 <script>
 
-const allFish=[
+/* =========================
+   기본 설정
+========================= */
+
+const allFish = [
   ...document.querySelectorAll('.fish')
 ];
 
-const game=document.getElementById('game');
+const game =
+  document.getElementById('game');
 
-const whiteFlash=
+const whiteFlash =
   document.getElementById('whiteFlash');
 
 
-// ==============================
-// 사진 파일 연결
-// ==============================
+/* =========================
+   배경 이미지
+========================= */
 
-// index.html과 사진 파일을 같은 폴더에 둡니다.
-
-const IMAGE_BASE_URL='./';
-
-const IMAGE_EXT='.png';
+const IMAGE_BASE_URL = './';
+const IMAGE_EXT = '.png';
 
 
-// 배경 이미지
-
-game.style.backgroundImage=
-  'linear-gradient(180deg, rgba(25,115,148,.10), rgba(2,18,43,.42)), url("'+
-  IMAGE_BASE_URL+
-  'bi'+
-  IMAGE_EXT+
+/*
+  ★ 기존보다 훨씬 밝게 설정
+*/
+game.style.backgroundImage =
+  'linear-gradient(' +
+  '180deg,' +
+  'rgba(25,115,148,.04),' +
+  'rgba(2,18,43,.10)' +
+  '), url("' +
+  IMAGE_BASE_URL +
+  'bi' +
+  IMAGE_EXT +
   '")';
 
-game.style.backgroundSize=
+game.style.backgroundSize =
   'cover, cover';
 
-game.style.backgroundPosition=
+game.style.backgroundPosition =
   'center, center';
 
-game.style.backgroundRepeat=
+game.style.backgroundRepeat =
   'no-repeat, no-repeat';
 
 
-// 물고기 이미지
+/* =========================
+   물고기 접근성 설정
+========================= */
 
-document.querySelectorAll('.fish')
-.forEach((fish,index)=>{
+/*
+  ★ 이제 이미지는 HTML의 img 태그에서
+     직접 불러오기 때문에
+     background-image 연결은 하지 않습니다.
+*/
 
-  fish.style.backgroundImage=
-    'url("'+
-    IMAGE_BASE_URL+
-    'f'+
-    (index+1)+
-    IMAGE_EXT+
-    '")';
+document
+  .querySelectorAll('.fish')
+  .forEach((fish)=>{
 
-  fish.setAttribute(
-    'role',
-    'button'
-  );
+    fish.setAttribute(
+      'role',
+      'button'
+    );
 
-  fish.setAttribute(
-    'aria-label',
-    fish.dataset.word+
-    ' 물고기 선택'
-  );
+    fish.setAttribute(
+      'aria-label',
+      fish.dataset.word +
+      ' 물고기 선택'
+    );
 
-});
+  });
 
 
-// ==============================
-// 게임 변수
-// ==============================
+/* =========================
+   화면 요소
+========================= */
 
-const progress=
+const progress =
   document.getElementById('progress');
 
-const message=
+const message =
   document.getElementById('message');
 
-const stageNo=
+const stageNo =
   document.getElementById('stageNo');
 
-const gameTitle=
+const gameTitle =
   document.getElementById('gameTitle');
 
-const gameGuide=
+const gameGuide =
   document.getElementById('gameGuide');
 
-const views=[
+const views = [
   ...document.querySelectorAll('.view')
 ];
 
 
-// ==============================
-// 결과 문구
-// ==============================
+/* =========================
+   랜덤 문구
+========================= */
 
-const quotes=[
+const quotes = [
 
-'당신 안의 작은 가능성들이 모여, 지금의 당신을 아름답게 빛냅니다.',
+  '당신 안의 작은 가능성들이 모여, 지금의 당신을 아름답게 빛냅니다.',
 
-'당신은 이미 자신만의 색으로 충분히 빛나고 있습니다.',
+  '당신은 이미 자신만의 색으로 충분히 빛나고 있습니다.',
 
-'서로 다른 가능성을 품은 당신은 그 자체로 하나의 빛입니다.',
+  '서로 다른 가능성을 품은 당신은 그 자체로 하나의 빛입니다.',
 
-'당신 안에는 아직 발견되지 않은 빛이 가득합니다.',
+  '당신 안에는 아직 발견되지 않은 빛이 가득합니다.',
 
-'당신이 가진 가능성 하나하나가 모두 소중한 빛입니다.',
+  '당신이 가진 가능성 하나하나가 모두 소중한 빛입니다.',
 
-'당신은 수많은 가능성을 품고 있는 빛나는 사람입니다.',
+  '당신은 수많은 가능성을 품고 있는 빛나는 사람입니다.',
 
-'당신 안의 가능성들은 저마다 고유한 빛을 내고 있습니다.',
+  '당신 안의 가능성들은 저마다 고유한 빛을 내고 있습니다.',
 
-'당신이 가진 서로 다른 빛들이 모여 지금의 당신을 만듭니다.',
+  '당신이 가진 서로 다른 빛들이 모여 지금의 당신을 만듭니다.',
 
-'당신은 이미 당신만의 가능성으로 반짝이고 있습니다.',
+  '당신은 이미 당신만의 가능성으로 반짝이고 있습니다.',
 
-'당신 안에 있는 작은 가능성도 그 자체로 충분히 빛납니다.',
+  '당신 안에 있는 작은 가능성도 그 자체로 충분히 빛납니다.',
 
-'당신의 용기와 열정은 이미 당신을 빛나게 하는 힘입니다.',
+  '당신의 용기와 열정은 이미 당신을 빛나게 하는 힘입니다.',
 
-'당신은 스스로 알지 못하는 순간에도 자신만의 빛을 품고 있습니다.',
+  '당신은 스스로 알지 못하는 순간에도 자신만의 빛을 품고 있습니다.',
 
-'당신 안의 수많은 가능성은 모두 당신을 이루는 아름다운 조각입니다.',
+  '당신 안의 수많은 가능성은 모두 당신을 이루는 아름다운 조각입니다.',
 
-'당신이 가진 가능성은 다른 누구와도 다른 당신만의 빛입니다.',
+  '당신이 가진 가능성은 다른 누구와도 다른 당신만의 빛입니다.',
 
-'당신은 하나의 모습으로만 빛나는 사람이 아닙니다.',
+  '당신은 하나의 모습으로만 빛나는 사람이 아닙니다.',
 
-'당신 안에는 서로 다른 색의 빛이 함께 살아가고 있습니다.',
+  '당신 안에는 서로 다른 색의 빛이 함께 살아가고 있습니다.',
 
-'당신이 발견한 가능성마다 당신만의 빛이 담겨 있습니다.',
+  '당신이 발견한 가능성마다 당신만의 빛이 담겨 있습니다.',
 
-'당신은 이미 여러 가능성이 어우러진 하나의 아름다운 빛입니다.',
+  '당신은 이미 여러 가능성이 어우러진 하나의 아름다운 빛입니다.',
 
-'당신의 작은 호기심조차 당신을 빛나게 하는 소중한 가능성입니다.',
+  '당신의 작은 호기심조차 당신을 빛나게 하는 소중한 가능성입니다.',
 
-'당신 안의 빛은 하나의 색으로 설명할 수 없을 만큼 다채롭습니다.',
+  '당신 안의 빛은 하나의 색으로 설명할 수 없을 만큼 다채롭습니다.',
 
-'당신이 가진 가능성은 비교할 수 없는 당신만의 아름다움입니다.',
+  '당신이 가진 가능성은 비교할 수 없는 당신만의 아름다움입니다.',
 
-'당신은 지금 이 순간에도 무한한 가능성을 품고 있습니다.',
+  '당신은 지금 이 순간에도 무한한 가능성을 품고 있습니다.',
 
-'당신 안의 모든 가능성은 저마다 빛날 가치가 있습니다.',
+  '당신 안의 모든 가능성은 저마다 빛날 가치가 있습니다.',
 
-'당신은 스스로 생각하는 것보다 더 많은 빛을 품고 있습니다.',
+  '당신은 스스로 생각하는 것보다 더 많은 빛을 품고 있습니다.',
 
-'당신의 가능성은 서로 어우러져 지금 이 순간에도 반짝입니다.',
+  '당신의 가능성은 서로 어우러져 지금 이 순간에도 반짝입니다.',
 
-'당신은 이미 자신만의 색과 빛을 가진 소중한 존재입니다.',
+  '당신은 이미 자신만의 색과 빛을 가진 소중한 존재입니다.',
 
-'당신 안의 작은 빛들은 모자람 없이 저마다의 자리를 빛냅니다.',
+  '당신 안의 작은 빛들은 모자람 없이 저마다의 자리를 빛냅니다.',
 
-'당신이 가진 가능성들은 모두 당신이라는 빛을 이루고 있습니다.',
+  '당신이 가진 가능성들은 모두 당신이라는 빛을 이루고 있습니다.',
 
-'세 가지 가능성을 발견한 오늘, 당신 안의 다채로운 빛도 발견합니다.',
+  '세 가지 가능성을 발견한 오늘, 당신 안의 다채로운 빛도 발견합니다.',
 
-'당신 안의 모든 가능성이 모여, 오직 당신만이 만들어 낼 수 있는 빛이 됩니다.'
+  '당신 안의 모든 가능성이 모여, 오직 당신만이 만들어 낼 수 있는 빛이 됩니다.'
 
 ];
 
 
-let stage=1;
-let words=[];
-let locked=false;
+/* =========================
+   게임 상태
+========================= */
+
+let stage = 1;
+let words = [];
+let locked = false;
 
 
-// ==============================
-// 물결 효과
-// ==============================
+/* =========================
+   Ripple
+========================= */
 
 function makeRipple(f){
 
-  const ripple=
+  const ripple =
     document.createElement('span');
 
-  ripple.className='ripple';
+  ripple.className =
+    'ripple';
 
-  ripple.style.left=
-    (f.offsetLeft+
-     f.offsetWidth/2-
-     12)+'px';
+  ripple.style.left =
+    (
+      f.offsetLeft +
+      f.offsetWidth / 2 -
+      12
+    ) + 'px';
 
-  ripple.style.top=
-    (f.offsetTop+
-     f.offsetHeight/2-
-     12)+'px';
+  ripple.style.top =
+    (
+      f.offsetTop +
+      f.offsetHeight / 2 -
+      12
+    ) + 'px';
 
   game.appendChild(ripple);
 
@@ -1201,16 +1671,17 @@ function makeRipple(f){
     ()=>ripple.remove(),
     900
   );
+
 }
 
 
-// ==============================
-// 단계 변경
-// ==============================
+/* =========================
+   Stage 변경
+========================= */
 
 function setStage(n){
 
-  stage=n;
+  stage = n;
 
   game.classList.remove(
     'stage-shift'
@@ -1223,11 +1694,14 @@ function setStage(n){
   );
 
   setTimeout(
-    ()=>game.classList.remove(
-      'stage-shift'
-    ),
+    ()=>{
+      game.classList.remove(
+        'stage-shift'
+      );
+    },
     1300
   );
+
 
   game.classList.remove(
     'stage1',
@@ -1236,52 +1710,57 @@ function setStage(n){
   );
 
   game.classList.add(
-    'stage'+n
+    'stage' + n
   );
+
 
   views.forEach(
-    (v,i)=>
+    (v,i)=>{
+
       v.classList.toggle(
         'active',
-        i===n-1
-      )
+        i === n - 1
+      );
+
+    }
   );
 
-  progress.textContent=
-    n+' / 3';
 
-  stageNo.textContent=
-    '0'+n;
+  progress.textContent =
+    n + ' / 3';
+
+  stageNo.textContent =
+    '0' + n;
 
 
-  if(n===1){
+  if(n === 1){
 
-    gameTitle.textContent=
+    gameTitle.textContent =
       '빛을 따라';
 
-    gameGuide.textContent=
+    gameGuide.textContent =
       '세 마리 중 마음이 가는 한 마리를 선택해보세요';
 
   }
 
 
-  if(n===2){
+  if(n === 2){
 
-    gameTitle.textContent=
+    gameTitle.textContent =
       '조금 더 가까이';
 
-    gameGuide.textContent=
+    gameGuide.textContent =
       '두 번째 시선이 머무는 한 마리를 선택해보세요';
 
   }
 
 
-  if(n===3){
+  if(n === 3){
 
-    gameTitle.textContent=
+    gameTitle.textContent =
       '수면을 향해';
 
-    gameGuide.textContent=
+    gameGuide.textContent =
       '마지막으로 빛나는 한 마리를 선택해보세요';
 
   }
@@ -1289,60 +1768,65 @@ function setStage(n){
 }
 
 
-// ==============================
-// 게임 종료
-// ==============================
+/* =========================
+   게임 종료
+========================= */
 
 function finish(){
 
-  document.getElementById(
-    'gameScreen'
-  ).style.display='none';
+  document
+    .getElementById('gameScreen')
+    .style.display = 'none';
 
-  document.querySelector(
-    '.top'
-  ).style.display='none';
+  document
+    .querySelector('.top')
+    .style.display = 'none';
 
-  document.getElementById(
-    'recordScreen'
-  ).classList.remove('active');
+  document
+    .getElementById('recordScreen')
+    .classList.remove('active');
 
-  document.getElementById(
-    'possibility'
-  ).classList.add('active');
+  document
+    .getElementById('possibility')
+    .classList.add('active');
 
-  document.getElementById(
-    'chosenWords'
-  ).textContent=
+
+  document
+    .getElementById('chosenWords')
+    .textContent =
     words.join(' · ');
 
-  document.getElementById(
-    'quote'
-  ).textContent=
+
+  document
+    .getElementById('quote')
+    .textContent =
     quotes[
       Math.floor(
-        Math.random()*
+        Math.random() *
         quotes.length
       )
     ];
+
 
   window.scrollTo(0,0);
 
 
   setTimeout(()=>{
 
-    whiteFlash.classList.add(
-      'fade-out'
-    );
+    whiteFlash
+      .classList
+      .add('fade-out');
 
-    whiteFlash.classList.remove(
-      'on'
-    );
+    whiteFlash
+      .classList
+      .remove('on');
 
     setTimeout(
-      ()=>whiteFlash.classList.remove(
-        'fade-out'
-      ),
+      ()=>{
+        whiteFlash
+          .classList
+          .remove('fade-out');
+      },
       1500
     );
 
@@ -1351,45 +1835,56 @@ function finish(){
 }
 
 
-// ==============================
-// 물고기 선택
-// ==============================
+/* =========================
+   물고기 클릭
+========================= */
 
 allFish.forEach(
-  f=>
-    f.onclick=()=>{
+  f => {
+
+    f.onclick = ()=>{
 
       if(
         locked ||
-        !f.closest('.view')
+        !f
+          .closest('.view')
           .classList
           .contains('active')
       ){
+
         return;
+
       }
 
-      locked=true;
+
+      locked = true;
+
 
       f.classList.add(
         'selected'
       );
 
+
       words.push(
         f.dataset.word
       );
 
+
       makeRipple(f);
 
 
-      message.innerHTML=
-        '<strong>'+
-        f.dataset.word+
-        '을 선택했어요.</strong>'+
-        [
-          '빛이 천천히 가까워지고 있어요.',
-          '조금 더 위로 올라가 볼까요.',
-          '마지막 빛이 당신을 기다리고 있어요.'
-        ][stage-1];
+      message.innerHTML =
+        '<strong>' +
+        f.dataset.word +
+        '을 선택했어요.</strong>' +
+
+        (
+          [
+            '빛이 천천히 가까워지고 있어요.',
+            '조금 더 위로 올라가 볼까요.',
+            '마지막 빛이 당신을 기다리고 있어요.'
+          ][stage - 1]
+        );
 
 
       setTimeout(()=>{
@@ -1399,31 +1894,36 @@ allFish.forEach(
         );
 
 
-        if(stage<3){
+        if(stage < 3){
 
           setStage(
-            stage+1
+            stage + 1
           );
 
-          locked=false;
+          locked = false;
 
-          message.innerHTML=
-            '<strong>새로운 가능성이 나타났어요.</strong>'+
+
+          message.innerHTML =
+            '<strong>새로운 가능성이 나타났어요.</strong>' +
             '이번에는 어떤 빛에 마음이 머물까요?';
 
-        }else{
+        }
 
-          message.innerHTML=
-            '<strong>빛이 당신을 감싸요.</strong>'+
+        else{
+
+          message.innerHTML =
+            '<strong>빛이 당신을 감싸요.</strong>' +
             '잠시 눈을 감고, 오늘의 가능성을 만나보세요.';
 
-          whiteFlash.classList.remove(
-            'fade-out'
-          );
 
-          whiteFlash.classList.add(
-            'on'
-          );
+          whiteFlash
+            .classList
+            .remove('fade-out');
+
+          whiteFlash
+            .classList
+            .add('on');
+
 
           setTimeout(
             finish,
@@ -1434,70 +1934,74 @@ allFish.forEach(
 
       },900);
 
-    }
+    };
+
+  }
 );
 
 
-// ==============================
-// 기록 화면
-// ==============================
+/* =========================
+   기록 남기기
+========================= */
 
-document.getElementById(
-  'toRecord'
-).onclick=()=>{
+document
+  .getElementById('toRecord')
+  .onclick = ()=>{
 
-  document.getElementById(
-    'possibility'
-  ).classList.remove(
-    'active'
-  );
+    document
+      .getElementById('possibility')
+      .classList
+      .remove('active');
 
-  document.getElementById(
-    'recordScreen'
-  ).classList.add(
-    'active'
-  );
+    document
+      .getElementById('recordScreen')
+      .classList
+      .add('active');
 
-  window.scrollTo(0,0);
+    window.scrollTo(0,0);
 
-};
+  };
 
 
-document.getElementById(
-  'backToPossibility'
-).onclick=()=>{
+/* =========================
+   가능성 화면으로
+========================= */
 
-  document.getElementById(
-    'recordScreen'
-  ).classList.remove(
-    'active'
-  );
+document
+  .getElementById('backToPossibility')
+  .onclick = ()=>{
 
-  document.getElementById(
-    'possibility'
-  ).classList.add(
-    'active'
-  );
+    document
+      .getElementById('recordScreen')
+      .classList
+      .remove('active');
 
-  window.scrollTo(0,0);
+    document
+      .getElementById('possibility')
+      .classList
+      .add('active');
 
-};
+    window.scrollTo(0,0);
 
-
-// ==============================
-// 다시 시작
-// ==============================
-
-document.getElementById(
-  'reset'
-).onclick=
-  ()=>location.reload();
+  };
 
 
-document.getElementById(
-  'again'
-).onclick=
-  ()=>location.reload();
+/* =========================
+   다시 시작
+========================= */
+
+document
+  .getElementById('reset')
+  .onclick = ()=>{
+    location.reload();
+  };
+
+
+document
+  .getElementById('again')
+  .onclick = ()=>{
+    location.reload();
+  };
 
 </script>
 
