@@ -1,323 +1,1507 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>오늘의 가능성</title>
+
 <style>
-:root{--ink:#26313d;--muted:#6e7b87;--line:rgba(38,49,61,.14)}
+:root{
+  --ink:#26313d;
+  --muted:#6e7b87;
+  --line:rgba(38,49,61,.14)
+}
+
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#e8efee;color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif}
-body{display:flex;justify-content:center;-webkit-tap-highlight-color:transparent}
-.app{width:100%;min-height:100vh;background:linear-gradient(180deg,#eaf2f1,#f7f7f4 58%,#eef0f1);overflow:hidden}
-.top{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.12em}
-.brand{font-family:Georgia,serif;font-size:15px}
-.screen{width:min(720px,calc(100% - 28px));margin:22px auto}
-.game{position:relative;aspect-ratio:1/1;overflow:hidden;background:linear-gradient(180deg,#dcecea 0%,#c5dde2 46%,#91b5c5 100%);box-shadow:0 20px 60px rgba(54,61,72,.13);transition:background 1.2s ease,transform 1s ease}
-.game:before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 5%,rgba(194,247,255,.36),transparent 34%),linear-gradient(180deg,rgba(9,73,108,.12),rgba(2,19,43,.38)),linear-gradient(90deg,rgba(255,255,255,.05),transparent 45%,rgba(5,26,48,.14));z-index:1;pointer-events:none}
-.game:after{content:"";position:absolute;left:-10%;right:-10%;bottom:-7%;height:24%;border-radius:50% 50% 0 0;background:linear-gradient(180deg,rgba(169,239,255,.12),rgba(3,26,55,.25));filter:blur(10px);animation:wave 5s ease-in-out infinite;z-index:2;pointer-events:none}
-.game.stage-shift{animation:underwaterShift 1.25s ease-in-out}
-@keyframes underwaterShift{0%{transform:translateY(0) scale(1);filter:brightness(1)}35%{transform:translateY(-15px) scale(1.018);filter:brightness(1.2)}70%{transform:translateY(-7px) scale(1.01);filter:brightness(1.08)}100%{transform:translateY(0) scale(1);filter:brightness(1)}}
-.title{position:absolute;top:7%;left:0;right:0;text-align:center;z-index:10}
-.title h1{font:400 clamp(25px,6vw,40px) Georgia,serif;margin:0 0 8px}
-.title p{font-size:11px;color:#667386;margin:0}
-.progress{position:absolute;right:4%;top:3%;font-size:10px;color:#687689;z-index:10}
-.view{position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;transition:opacity .7s ease,transform 1s ease}
-.view.active{opacity:1;pointer-events:auto}
-.view2,.view3{transform:translateY(55px)}
-.view2.active,.view3.active{transform:translateY(0)}
-.view1:not(.active),.view2:not(.active),.view3:not(.active){transform:translateY(-70px)}
-.fish{position:absolute;width:108px;height:76px;border-radius:0;background-color:transparent;background-repeat:no-repeat;background-position:center;background-size:contain;cursor:pointer;z-index:6;filter:drop-shadow(0 7px 8px rgba(61,91,108,.22));transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .5s,filter .5s}
-.fish:before{content:none}
-.fish:after{content:none}
-.fish .fin,.fish .fin2{display:none}
-.fish .spark{position:absolute;left:-18px;top:12px;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.8);box-shadow:13px -13px 0 rgba(255,255,255,.45),-6px 14px 0 rgba(255,255,255,.35);animation:sparkle 2s ease-in-out infinite}
-.fish:hover{transform:scale(1.08) rotate(-2deg);filter:drop-shadow(0 10px 13px rgba(61,91,108,.22))}
-.fish.selected{animation:chooseFish 1.3s ease forwards}
-.fish.gone{opacity:0;transform:scale(.45) translateY(-45px)}
-.f1{left:16%;top:43%;background:transparent;color:transparent;animation:floatFish 4.2s ease-in-out infinite}
-.f2{left:45%;top:35%;background:transparent;color:transparent;animation:floatFish 4.7s ease-in-out -1.2s infinite}
-.f3{right:13%;top:50%;background:transparent;color:transparent;animation:floatFish 4.4s ease-in-out -2.3s infinite}
-.f4{left:15%;top:52%;background:transparent;color:transparent;animation:floatFish 4.6s ease-in-out -.8s infinite}
-.f5{left:44%;top:45%;background:transparent;color:transparent;animation:floatFish 4.1s ease-in-out -1.8s infinite}
-.f6{right:13%;top:39%;background:transparent;color:transparent;animation:floatFish 4.9s ease-in-out -2.7s infinite}
-.f7{left:17%;top:48%;background:transparent;color:transparent;animation:floatFish 4.5s ease-in-out -1.1s infinite}
-.f8{left:45%;top:38%;background:transparent;color:transparent;animation:floatFish 4.3s ease-in-out -2.2s infinite}
-.f9{right:14%;top:50%;background:transparent;color:transparent;animation:floatFish 4.8s ease-in-out -.5s infinite}
-.viewLabel{position:absolute;top:18%;left:0;right:0;text-align:center;font-size:10px;letter-spacing:.16em;color:#637687}
-.light{position:absolute;left:31%;top:-12%;width:38%;height:78%;background:linear-gradient(#fff,rgba(255,244,222,.12));clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);filter:blur(8px);opacity:.72;animation:breathe 4s ease-in-out infinite;z-index:2}
-.eyeView{position:absolute;left:50%;bottom:0;width:170px;height:105px;transform:translateX(-50%);z-index:8;pointer-events:none}
-.eyeView:before{content:"";position:absolute;left:50%;bottom:-35px;width:220px;height:100px;transform:translateX(-50%);border-radius:50% 50% 0 0;background:radial-gradient(ellipse at center,rgba(44,71,85,.08),transparent 68%);filter:blur(7px)}
-.eyeView:after{content:"";position:absolute;left:50%;bottom:-18px;width:85px;height:48px;transform:translateX(-50%);border-radius:50% 50% 45% 45%;background:linear-gradient(160deg,rgba(72,96,112,.7),rgba(126,112,151,.35));filter:blur(2px);clip-path:polygon(50% 0,85% 100%,15% 100%)}
-.choiceGlow{position:absolute;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.65),rgba(255,206,238,.15),transparent 70%);filter:blur(4px);opacity:0;z-index:4;pointer-events:none}
-.g1{left:4%;top:30%}.g2{left:42%;top:27%}.g3{right:2%;top:34%}
-.game.stage2 .g1,.game.stage2 .g2,.game.stage2 .g3{opacity:.55;animation:glowPulse 2.2s ease-in-out infinite}
-.game.stage3 .g1,.game.stage3 .g2,.game.stage3 .g3{opacity:.7;animation:glowPulse 1.8s ease-in-out infinite}
-.message{position:absolute;bottom:5%;left:10%;right:10%;text-align:center;font-size:12px;line-height:1.7;z-index:12;transition:opacity .4s}
-.message strong{display:block;font:400 18px Georgia,serif}
-.btn{border:1px solid rgba(44,48,64,.2);background:rgba(250,250,248,.8);color:var(--ink);padding:11px 19px;border-radius:999px;font-size:12px;cursor:pointer}
-.primary{background:#303746;color:white;border-color:#303746}
-.center{display:flex;justify-content:center;margin-top:14px}
-.special{display:none;min-height:calc(100vh - 62px);align-items:center;justify-content:center;padding:22px 16px}
-.special.active{display:flex}
-.card{width:min(620px,100%);text-align:center;background:rgba(250,250,248,.82);padding:46px 24px;box-shadow:0 20px 55px rgba(54,61,72,.09)}
-.small{font-size:10px;letter-spacing:.22em;color:var(--muted);margin-bottom:12px}
-.card .possibilityWords{display:block;font-size:12px;letter-spacing:.08em;line-height:1.8;color:#687689;margin:0 auto 22px}
-.quote{font:400 clamp(18px,4.2vw,27px)/1.6 Georgia,serif;margin:0 auto 30px;max-width:520px}
-.sub{font-size:12px;color:var(--muted);line-height:1.9;margin-bottom:24px}
-.reminder{font-size:11px;margin:-12px auto 24px}
-.guest{display:block;margin-top:28px}
-.guest iframe{width:100%;height:520px;border:0;background:white}
-.notice{font-size:10px;color:var(--muted);margin-top:9px}
-.back{margin-top:18px}
-.white-flash{position:fixed;inset:0;z-index:9999;pointer-events:none;background:radial-gradient(ellipse at 50% 48%,#fff 0%,rgba(255,255,255,.99) 35%,rgba(255,255,255,.94) 70%,#fff 100%);opacity:0;transition:opacity 1.35s ease}
-.white-flash.on{opacity:1}
-.white-flash.fade-out{opacity:0;transition:opacity 1.45s ease}
-.rainbow{position:absolute;inset:-20%;z-index:30;pointer-events:none;opacity:0;background:conic-gradient(from 180deg,rgba(255,182,211,.0),rgba(255,182,211,.58),rgba(255,235,166,.55),rgba(171,238,205,.5),rgba(170,215,255,.58),rgba(213,181,255,.52),rgba(255,182,211,.0));filter:blur(18px);mix-blend-mode:screen}
-.surface{position:absolute;left:-8%;right:-8%;top:78%;height:2px;background:rgba(255,255,255,.8);box-shadow:0 0 18px rgba(255,255,255,.75);z-index:25;opacity:0}
-.sparkles{position:absolute;inset:0;z-index:28;pointer-events:none}
-.sparkles i{position:absolute;width:4px;height:4px;border-radius:50%;background:white;box-shadow:0 0 12px white;opacity:0}
-.s1{left:15%;bottom:15%}.s2{left:28%;bottom:28%;animation-delay:.15s}.s3{left:43%;bottom:18%;animation-delay:.3s}.s4{left:59%;bottom:25%;animation-delay:.45s}.s5{left:76%;bottom:16%;animation-delay:.6s}.s6{left:84%;bottom:36%;animation-delay:.75s}
-.waveLine{position:absolute;left:-10%;right:-10%;height:18px;border-top:1px solid rgba(255,255,255,.48);border-radius:50%;opacity:.35;animation:waveLine 4s ease-in-out infinite;z-index:5}
-.w1{top:67%}.w2{top:74%;animation-delay:-1.5s}.w3{top:82%;animation-delay:-3s}
-@keyframes floatFish{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(10px,-13px,0) rotate(-3deg)}}
-@keyframes chooseFish{0%{transform:scale(1)}35%{transform:scale(1.16) rotate(-5deg);filter:brightness(1.25) drop-shadow(0 0 22px rgba(255,255,255,.8))}100%{transform:translateY(-155px) scale(.72);opacity:0}}
-@keyframes sparkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.25)}}
-@keyframes breathe{0%,100%{opacity:.45;transform:scaleX(.92)}50%{opacity:.88;transform:scaleX(1.06)}}
-@keyframes wave{0%,100%{transform:translateX(-2%) rotate(-1deg)}50%{transform:translateX(2%) rotate(1deg)}}
-@keyframes glowPulse{0%,100%{transform:scale(.8);opacity:.35}50%{transform:scale(1.12);opacity:.75}}
-@keyframes ripple{to{width:150px;height:150px;opacity:0;transform:translate(-63px,-63px)}}
-@media(max-width:600px){.top{height:56px;padding:0 15px}.screen{width:calc(100% - 16px);margin:14px auto}.special{min-height:calc(100vh - 56px);padding:14px 10px}.card{padding:38px 18px}.guest iframe{height:500px}.fish{width:84px;height:62px}.eyeView{transform:translateX(-50%) scale(.8);transform-origin:bottom center}}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:#e8efee;
+  color:var(--ink);
+  font-family:"Noto Sans KR",system-ui,sans-serif
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  -webkit-tap-highlight-color:transparent
+}
+
+.app{
+  width:100%;
+  min-height:100vh;
+  background:linear-gradient(180deg,#eaf2f1,#f7f7f4 58%,#eef0f1);
+  overflow:hidden
+}
+
+.top{
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  border-bottom:1px solid var(--line);
+  font-size:11px;
+  letter-spacing:.12em
+}
+
+.brand{
+  font-family:Georgia,serif;
+  font-size:15px
+}
+
+.screen{
+  width:min(720px,calc(100% - 28px));
+  margin:22px auto
+}
+
+.game{
+  position:relative;
+  aspect-ratio:1/1;
+  overflow:hidden;
+  background:linear-gradient(
+    180deg,
+    #dcecea 0%,
+    #c5dde2 46%,
+    #91b5c5 100%
+  );
+  box-shadow:0 20px 60px rgba(54,61,72,.13);
+  transition:background 1.2s ease,transform 1s ease
+}
+
+.game:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(
+      ellipse at 50% 5%,
+      rgba(194,247,255,.36),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(9,73,108,.12),
+      rgba(2,19,43,.38)
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.05),
+      transparent 45%,
+      rgba(5,26,48,.14)
+    );
+  z-index:1;
+  pointer-events:none
+}
+
+.game:after{
+  content:"";
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:-7%;
+  height:24%;
+  border-radius:50% 50% 0 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(169,239,255,.12),
+      rgba(3,26,55,.25)
+    );
+  filter:blur(10px);
+  animation:wave 5s ease-in-out infinite;
+  z-index:2;
+  pointer-events:none
+}
+
+.game.stage-shift{
+  animation:underwaterShift 1.25s ease-in-out
+}
+
+@keyframes underwaterShift{
+  0%{
+    transform:translateY(0) scale(1);
+    filter:brightness(1)
+  }
+  35%{
+    transform:translateY(-15px) scale(1.018);
+    filter:brightness(1.2)
+  }
+  70%{
+    transform:translateY(-7px) scale(1.01);
+    filter:brightness(1.08)
+  }
+  100%{
+    transform:translateY(0) scale(1);
+    filter:brightness(1)
+  }
+}
+
+.title{
+  position:absolute;
+  top:7%;
+  left:0;
+  right:0;
+  text-align:center;
+  z-index:10
+}
+
+.title h1{
+  font:400 clamp(25px,6vw,40px) Georgia,serif;
+  margin:0 0 8px
+}
+
+.title p{
+  font-size:11px;
+  color:#667386;
+  margin:0
+}
+
+.progress{
+  position:absolute;
+  right:4%;
+  top:3%;
+  font-size:10px;
+  color:#687689;
+  z-index:10
+}
+
+.view{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .7s ease,transform 1s ease
+}
+
+.view.active{
+  opacity:1;
+  pointer-events:auto
+}
+
+.view2,.view3{
+  transform:translateY(55px)
+}
+
+.view2.active,.view3.active{
+  transform:translateY(0)
+}
+
+.view1:not(.active),
+.view2:not(.active),
+.view3:not(.active){
+  transform:translateY(-70px)
+}
+
+.fish{
+  position:absolute;
+  width:108px;
+  height:76px;
+  border-radius:0;
+  background-color:transparent;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  cursor:pointer;
+  z-index:6;
+  filter:drop-shadow(
+    0 7px 8px rgba(61,91,108,.22)
+  );
+  transition:
+    transform .9s cubic-bezier(.2,.8,.2,1),
+    opacity .5s,
+    filter .5s
+}
+
+.fish:before{
+  content:none
+}
+
+.fish:after{
+  content:none
+}
+
+.fish .fin,
+.fish .fin2{
+  display:none
+}
+
+.fish .spark{
+  position:absolute;
+  left:-18px;
+  top:12px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.8);
+  box-shadow:
+    13px -13px 0 rgba(255,255,255,.45),
+    -6px 14px 0 rgba(255,255,255,.35);
+  animation:sparkle 2s ease-in-out infinite
+}
+
+.fish:hover{
+  transform:scale(1.08) rotate(-2deg);
+  filter:drop-shadow(
+    0 10px 13px rgba(61,91,108,.22)
+  )
+}
+
+.fish.selected{
+  animation:chooseFish 1.3s ease forwards
+}
+
+.fish.gone{
+  opacity:0;
+  transform:scale(.45) translateY(-45px)
+}
+
+.f1{
+  left:16%;
+  top:43%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.2s ease-in-out infinite
+}
+
+.f2{
+  left:45%;
+  top:35%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.7s ease-in-out -1.2s infinite
+}
+
+.f3{
+  right:13%;
+  top:50%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.4s ease-in-out -2.3s infinite
+}
+
+.f4{
+  left:15%;
+  top:52%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.6s ease-in-out -.8s infinite
+}
+
+.f5{
+  left:44%;
+  top:45%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.1s ease-in-out -1.8s infinite
+}
+
+.f6{
+  right:13%;
+  top:39%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.9s ease-in-out -2.7s infinite
+}
+
+.f7{
+  left:17%;
+  top:48%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.5s ease-in-out -1.1s infinite
+}
+
+.f8{
+  left:45%;
+  top:38%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.3s ease-in-out -2.2s infinite
+}
+
+.f9{
+  right:14%;
+  top:50%;
+  background:transparent;
+  color:transparent;
+  animation:floatFish 4.8s ease-in-out -.5s infinite
+}
+
+.viewLabel{
+  position:absolute;
+  top:18%;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:10px;
+  letter-spacing:.16em;
+  color:#637687
+}
+
+.light{
+  position:absolute;
+  left:31%;
+  top:-12%;
+  width:38%;
+  height:78%;
+  background:
+    linear-gradient(
+      #fff,
+      rgba(255,244,222,.12)
+    );
+  clip-path:polygon(
+    30% 0,
+    70% 0,
+    100% 100%,
+    0 100%
+  );
+  filter:blur(8px);
+  opacity:.72;
+  animation:breathe 4s ease-in-out infinite;
+  z-index:2
+}
+
+.eyeView{
+  position:absolute;
+  left:50%;
+  bottom:0;
+  width:170px;
+  height:105px;
+  transform:translateX(-50%);
+  z-index:8;
+  pointer-events:none
+}
+
+.eyeView:before{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-35px;
+  width:220px;
+  height:100px;
+  transform:translateX(-50%);
+  border-radius:50% 50% 0 0;
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(44,71,85,.08),
+      transparent 68%
+    );
+  filter:blur(7px)
+}
+
+.eyeView:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-18px;
+  width:85px;
+  height:48px;
+  transform:translateX(-50%);
+  border-radius:50% 50% 45% 45%;
+  background:
+    linear-gradient(
+      160deg,
+      rgba(72,96,112,.7),
+      rgba(126,112,151,.35)
+    );
+  filter:blur(2px);
+  clip-path:polygon(
+    50% 0,
+    85% 100%,
+    15% 100%
+  )
+}
+
+.choiceGlow{
+  position:absolute;
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.65),
+      rgba(255,206,238,.15),
+      transparent 70%
+    );
+  filter:blur(4px);
+  opacity:0;
+  z-index:4;
+  pointer-events:none
+}
+
+.g1{left:4%;top:30%}
+.g2{left:42%;top:27%}
+.g3{right:2%;top:34%}
+
+.game.stage2 .g1,
+.game.stage2 .g2,
+.game.stage2 .g3{
+  opacity:.55;
+  animation:glowPulse 2.2s ease-in-out infinite
+}
+
+.game.stage3 .g1,
+.game.stage3 .g2,
+.game.stage3 .g3{
+  opacity:.7;
+  animation:glowPulse 1.8s ease-in-out infinite
+}
+
+.message{
+  position:absolute;
+  bottom:5%;
+  left:10%;
+  right:10%;
+  text-align:center;
+  font-size:12px;
+  line-height:1.7;
+  z-index:12;
+  transition:opacity .4s
+}
+
+.message strong{
+  display:block;
+  font:400 18px Georgia,serif
+}
+
+.btn{
+  border:1px solid rgba(44,48,64,.2);
+  background:rgba(250,250,248,.8);
+  color:var(--ink);
+  padding:11px 19px;
+  border-radius:999px;
+  font-size:12px;
+  cursor:pointer
+}
+
+.primary{
+  background:#303746;
+  color:white;
+  border-color:#303746
+}
+
+.center{
+  display:flex;
+  justify-content:center;
+  margin-top:14px
+}
+
+.special{
+  display:none;
+  min-height:calc(100vh - 62px);
+  align-items:center;
+  justify-content:center;
+  padding:22px 16px
+}
+
+.special.active{
+  display:flex
+}
+
+.card{
+  width:min(620px,100%);
+  text-align:center;
+  background:rgba(250,250,248,.82);
+  padding:46px 24px;
+  box-shadow:0 20px 55px rgba(54,61,72,.09)
+}
+
+.small{
+  font-size:10px;
+  letter-spacing:.22em;
+  color:var(--muted);
+  margin-bottom:12px
+}
+
+.card .possibilityWords{
+  display:block;
+  font-size:12px;
+  letter-spacing:.08em;
+  line-height:1.8;
+  color:#687689;
+  margin:0 auto 22px
+}
+
+.quote{
+  font:400 clamp(18px,4.2vw,27px)/1.6 Georgia,serif;
+  margin:0 auto 30px;
+  max-width:520px
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.9;
+  margin-bottom:24px
+}
+
+.reminder{
+  font-size:11px;
+  margin:-12px auto 24px
+}
+
+.guest{
+  display:block;
+  margin-top:28px
+}
+
+.guest iframe{
+  width:100%;
+  height:520px;
+  border:0;
+  background:white
+}
+
+.notice{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:9px
+}
+
+.back{
+  margin-top:18px
+}
+
+.white-flash{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  pointer-events:none;
+  background:
+    radial-gradient(
+      ellipse at 50% 48%,
+      #fff 0%,
+      rgba(255,255,255,.99) 35%,
+      rgba(255,255,255,.94) 70%,
+      #fff 100%
+    );
+  opacity:0;
+  transition:opacity 1.35s ease
+}
+
+.white-flash.on{
+  opacity:1
+}
+
+.white-flash.fade-out{
+  opacity:0;
+  transition:opacity 1.45s ease
+}
+
+.rainbow{
+  position:absolute;
+  inset:-20%;
+  z-index:30;
+  pointer-events:none;
+  opacity:0;
+  background:
+    conic-gradient(
+      from 180deg,
+      rgba(255,182,211,.0),
+      rgba(255,182,211,.58),
+      rgba(255,235,166,.55),
+      rgba(171,238,205,.5),
+      rgba(170,215,255,.58),
+      rgba(213,181,255,.52),
+      rgba(255,182,211,.0)
+    );
+  filter:blur(18px);
+  mix-blend-mode:screen
+}
+
+.surface{
+  position:absolute;
+  left:-8%;
+  right:-8%;
+  top:78%;
+  height:2px;
+  background:rgba(255,255,255,.8);
+  box-shadow:0 0 18px rgba(255,255,255,.75);
+  z-index:25;
+  opacity:0
+}
+
+.sparkles{
+  position:absolute;
+  inset:0;
+  z-index:28;
+  pointer-events:none
+}
+
+.sparkles i{
+  position:absolute;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 0 12px white;
+  opacity:0
+}
+
+.s1{left:15%;bottom:15%}
+.s2{left:28%;bottom:28%;animation-delay:.15s}
+.s3{left:43%;bottom:18%;animation-delay:.3s}
+.s4{left:59%;bottom:25%;animation-delay:.45s}
+.s5{left:76%;bottom:16%;animation-delay:.6s}
+.s6{left:84%;bottom:36%;animation-delay:.75s}
+
+.waveLine{
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  height:18px;
+  border-top:1px solid rgba(255,255,255,.48);
+  border-radius:50%;
+  opacity:.35;
+  animation:waveLine 4s ease-in-out infinite;
+  z-index:5
+}
+
+.w1{top:67%}
+.w2{top:74%;animation-delay:-1.5s}
+.w3{top:82%;animation-delay:-3s}
+
+@keyframes floatFish{
+  0%,100%{
+    transform:translate3d(0,0,0) rotate(0deg)
+  }
+  50%{
+    transform:translate3d(10px,-13px,0) rotate(-3deg)
+  }
+}
+
+@keyframes chooseFish{
+  0%{
+    transform:scale(1)
+  }
+  35%{
+    transform:scale(1.16) rotate(-5deg);
+    filter:brightness(1.25)
+      drop-shadow(
+        0 0 22px rgba(255,255,255,.8)
+      )
+  }
+  100%{
+    transform:translateY(-155px) scale(.72);
+    opacity:0
+  }
+}
+
+@keyframes sparkle{
+  0%,100%{
+    opacity:.25;
+    transform:scale(.7)
+  }
+  50%{
+    opacity:1;
+    transform:scale(1.25)
+  }
+}
+
+@keyframes breathe{
+  0%,100%{
+    opacity:.45;
+    transform:scaleX(.92)
+  }
+  50%{
+    opacity:.88;
+    transform:scaleX(1.06)
+  }
+}
+
+@keyframes wave{
+  0%,100%{
+    transform:translateX(-2%) rotate(-1deg)
+  }
+  50%{
+    transform:translateX(2%) rotate(1deg)
+  }
+}
+
+@keyframes glowPulse{
+  0%,100%{
+    transform:scale(.8);
+    opacity:.35
+  }
+  50%{
+    transform:scale(1.12);
+    opacity:.75
+  }
+}
+
+@keyframes ripple{
+  to{
+    width:150px;
+    height:150px;
+    opacity:0;
+    transform:translate(-63px,-63px)
+  }
+}
+
+@media(max-width:600px){
+  .top{
+    height:56px;
+    padding:0 15px
+  }
+
+  .screen{
+    width:calc(100% - 16px);
+    margin:14px auto
+  }
+
+  .special{
+    min-height:calc(100vh - 56px);
+    padding:14px 10px
+  }
+
+  .card{
+    padding:38px 18px
+  }
+
+  .guest iframe{
+    height:500px
+  }
+
+  .fish{
+    width:84px;
+    height:62px
+  }
+
+  .eyeView{
+    transform:translateX(-50%) scale(.8);
+    transform-origin:bottom center
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="white-flash" id="whiteFlash" aria-hidden="true"></div>
+
 <main class="app">
-<header class="top"><div class="brand">오늘의 가능성</div><div id="stageNo">01</div></header>
+
+<header class="top">
+  <div class="brand">오늘의 가능성</div>
+  <div id="stageNo">01</div>
+</header>
 
 <section class="screen" id="gameScreen">
+
 <div class="game" id="game">
-<div class="title"><h1 id="gameTitle">빛을 따라</h1><p id="gameGuide">세 마리 중 마음이 가는 한 마리를 선택해보세요</p></div>
+
+<div class="title">
+  <h1 id="gameTitle">빛을 따라</h1>
+  <p id="gameGuide">
+    세 마리 중 마음이 가는 한 마리를 선택해보세요
+  </p>
+</div>
+
 <div class="progress" id="progress">1 / 3</div>
+
 <div class="light"></div>
-<div class="waveLine w1"></div><div class="waveLine w2"></div><div class="waveLine w3"></div>
-<div class="choiceGlow g1"></div><div class="choiceGlow g2"></div><div class="choiceGlow g3"></div>
+
+<div class="waveLine w1"></div>
+<div class="waveLine w2"></div>
+<div class="waveLine w3"></div>
+
+<div class="choiceGlow g1"></div>
+<div class="choiceGlow g2"></div>
+<div class="choiceGlow g3"></div>
+
+
+<!-- 1단계 -->
 
 <div class="view view1 active">
-<div class="viewLabel">YOUR FIRST GAZE</div>
-<div class="fish f1" data-word="용기"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f2" data-word="열정"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f3" data-word="호기심"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
+
+<div class="viewLabel">
+  YOUR FIRST GAZE
 </div>
+
+<div class="fish f1" data-word="용기">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f2" data-word="열정">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f3" data-word="호기심">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+</div>
+
+
+<!-- 2단계 -->
 
 <div class="view view2">
-<div class="viewLabel">A LITTLE CLOSER</div>
-<div class="fish f4" data-word="자신감"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f5" data-word="의지"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f6" data-word="희망"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
+
+<div class="viewLabel">
+  A LITTLE CLOSER
 </div>
+
+<div class="fish f4" data-word="자신감">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f5" data-word="의지">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f6" data-word="희망">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+</div>
+
+
+<!-- 3단계 -->
 
 <div class="view view3">
-<div class="viewLabel">TOWARD THE SURFACE</div>
-<div class="fish f7" data-word="도전"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f8" data-word="창의성"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
-<div class="fish f9" data-word="끈기"><span class="fin"></span><span class="fin2"></span><span class="spark"></span></div>
+
+<div class="viewLabel">
+  TOWARD THE SURFACE
 </div>
+
+<div class="fish f7" data-word="도전">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f8" data-word="창의성">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+<div class="fish f9" data-word="끈기">
+  <span class="fin"></span>
+  <span class="fin2"></span>
+  <span class="spark"></span>
+</div>
+
+</div>
+
 
 <div class="eyeView"></div>
+
 <div class="rainbow"></div>
+
 <div class="surface"></div>
-<div class="sparkles"><i class="s1"></i><i class="s2"></i><i class="s3"></i><i class="s4"></i><i class="s5"></i><i class="s6"></i></div>
-<div class="message" id="message"><strong>작은 빛을 찾아보세요.</strong>내 시선이 머무는 물고기를 눌러 시작하세요.</div>
+
+<div class="sparkles">
+  <i class="s1"></i>
+  <i class="s2"></i>
+  <i class="s3"></i>
+  <i class="s4"></i>
+  <i class="s5"></i>
+  <i class="s6"></i>
 </div>
-<div class="center"><button class="btn" id="reset">다시 시작</button></div>
+
+<div class="message" id="message">
+  <strong>작은 빛을 찾아보세요.</strong>
+  내 시선이 머무는 물고기를 눌러 시작하세요.
+</div>
+
+</div>
+
+<div class="center">
+  <button class="btn" id="reset">다시 시작</button>
+</div>
+
 </section>
+
+
+<!-- 가능성 결과 화면 -->
 
 <section class="special" id="possibility">
+
 <div class="card">
-<div class="small">YOUR POSSIBILITY</div>
-<p class="possibilityWords" id="chosenWords">당신이 발견한 가능성</p>
-<p class="quote" id="quote"></p>
-<p class="sub reminder" id="possibilityReminder">오늘 발견한 당신의 가능성을 기억해주세요.</p>
-<button class="btn primary" id="toRecord">기록 남기기</button>
+
+<div class="small">
+  YOUR POSSIBILITY
 </div>
+
+<p class="possibilityWords" id="chosenWords">
+  당신이 발견한 가능성
+</p>
+
+<p class="quote" id="quote"></p>
+
+<p class="sub reminder" id="possibilityReminder">
+  오늘 발견한 당신의 가능성을 기억해주세요.
+</p>
+
+<button class="btn primary" id="toRecord">
+  기록 남기기
+</button>
+
+</div>
+
 </section>
+
+
+<!-- 기록 화면 -->
 
 <section class="special" id="recordScreen">
+
 <div class="card">
-<div class="small">LEAVE A RECORD</div>
-<h2 style="font:400 clamp(24px,5vw,34px) Georgia,serif;margin:0 0 12px">오늘의 마음을 남겨주세요</h2>
-<p class="sub">전시를 보며 느낀 점이나 오늘 발견한 가능성에 대한 생각을 자유롭게 기록해주세요.</p>
+
+<div class="small">
+  LEAVE A RECORD
+</div>
+
+<h2 style="
+font:400 clamp(24px,5vw,34px) Georgia,serif;
+margin:0 0 12px
+">
+오늘의 마음을 남겨주세요
+</h2>
+
+<p class="sub">
+전시를 보며 느낀 점이나 오늘 발견한 가능성에 대한 생각을 자유롭게 기록해주세요.
+</p>
+
 <div class="guest" id="guest">
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true" title="전시 감상 기록 남기기"></iframe>
-<div class="notice">남겨주신 한마디는 전시 기록으로 소중히 보관됩니다.</div>
+
+<iframe
+src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
+title="전시 감상 기록 남기기">
+</iframe>
+
+<div class="notice">
+남겨주신 한마디는 전시 기록으로 소중히 보관됩니다.
 </div>
-<button class="btn back" id="backToPossibility">가능성 화면으로</button>
-<button class="btn back" id="again">처음부터 다시하기</button>
+
 </div>
+
+<button class="btn back" id="backToPossibility">
+가능성 화면으로
+</button>
+
+<button class="btn back" id="again">
+처음부터 다시하기
+</button>
+
+</div>
+
 </section>
 
+
 <script>
-const allFish=[...document.querySelectorAll('.fish')];
-const game=document.getElementById('game');
-const whiteFlash=document.getElementById('whiteFlash');
 
-// 이미지 파일은 index.html과 같은 폴더에 둡니다.
-const IMAGE_BASE_URL='./';
-const IMAGE_EXT='.png';
-
-// 배경 이미지 연결
-game.style.backgroundImage=
-  'linear-gradient(180deg, rgba(25,115,148,.10), rgba(2,18,43,.42)), url("'+
-  IMAGE_BASE_URL+'bi'+IMAGE_EXT+'")';
-game.style.backgroundSize='cover, cover';
-game.style.backgroundPosition='center, center';
-game.style.backgroundRepeat='no-repeat, no-repeat';
-
-// 물고기 이미지 연결
-document.querySelectorAll('.fish').forEach((fish,index)=>{
-  fish.style.backgroundImage='url("'+IMAGE_BASE_URL+'f'+(index+1)+IMAGE_EXT+'")';
-  fish.setAttribute('role','button');
-  fish.setAttribute('aria-label',fish.dataset.word+' 물고기 선택');
-});
-
-const progress=document.getElementById('progress');
-const message=document.getElementById('message');
-const stageNo=document.getElementById('stageNo');
-const gameTitle=document.getElementById('gameTitle');
-const gameGuide=document.getElementById('gameGuide');
-const views=[...document.querySelectorAll('.view')];
-
-const quotes=[
-'당신 안의 작은 가능성들이 모여, 지금의 당신을 아름답게 빛냅니다.',
-'당신은 이미 자신만의 색으로 충분히 빛나고 있습니다.',
-'서로 다른 가능성을 품은 당신은 그 자체로 하나의 빛입니다.',
-'당신 안에는 아직 발견되지 않은 빛이 가득합니다.',
-'당신이 가진 가능성 하나하나가 모두 소중한 빛입니다.',
-'당신은 수많은 가능성을 품고 있는 빛나는 사람입니다.',
-'당신 안의 가능성들은 저마다 고유한 빛을 내고 있습니다.',
-'당신이 가진 서로 다른 빛들이 모여 지금의 당신을 만듭니다.',
-'당신은 이미 당신만의 가능성으로 반짝이고 있습니다.',
-'당신 안에 있는 작은 가능성도 그 자체로 충분히 빛납니다.',
-'당신의 용기와 열정은 이미 당신을 빛나게 하는 힘입니다.',
-'당신은 스스로 알지 못하는 순간에도 자신만의 빛을 품고 있습니다.',
-'당신 안의 수많은 가능성은 모두 당신을 이루는 아름다운 조각입니다.',
-'당신이 가진 가능성은 다른 누구와도 다른 당신만의 빛입니다.',
-'당신은 하나의 모습으로만 빛나는 사람이 아닙니다.',
-'당신 안에는 서로 다른 색의 빛이 함께 살아가고 있습니다.',
-'당신이 발견한 가능성마다 당신만의 빛이 담겨 있습니다.',
-'당신은 이미 여러 가능성이 어우러진 하나의 아름다운 빛입니다.',
-'당신의 작은 호기심조차 당신을 빛나게 하는 소중한 가능성입니다.',
-'당신 안의 빛은 하나의 색으로 설명할 수 없을 만큼 다채롭습니다.',
-'당신이 가진 가능성은 비교할 수 없는 당신만의 아름다움입니다.',
-'당신은 지금 이 순간에도 무한한 가능성을 품고 있습니다.',
-'당신 안의 모든 가능성은 저마다 빛날 가치가 있습니다.',
-'당신은 스스로 생각하는 것보다 더 많은 빛을 품고 있습니다.',
-'당신의 가능성은 서로 어우러져 지금 이 순간에도 반짝입니다.',
-'당신은 이미 자신만의 색과 빛을 가진 소중한 존재입니다.',
-'당신 안의 작은 빛들은 모자람 없이 저마다의 자리를 빛냅니다.',
-'당신이 가진 가능성들은 모두 당신이라는 빛을 이루고 있습니다.',
-'세 가지 가능성을 발견한 오늘, 당신 안의 다채로운 빛도 발견합니다.',
-'당신 안의 모든 가능성이 모여, 오직 당신만이 만들어 낼 수 있는 빛이 됩니다.'
+const allFish=[
+  ...document.querySelectorAll('.fish')
 ];
 
-let stage=1,words=[],locked=false;
+const game=document.getElementById('game');
 
-function makeRipple(f){
-  const ripple=document.createElement('span');
-  ripple.className='ripple';
-  ripple.style.left=(f.offsetLeft+f.offsetWidth/2-12)+'px';
-  ripple.style.top=(f.offsetTop+f.offsetHeight/2-12)+'px';
-  game.appendChild(ripple);
-  setTimeout(()=>ripple.remove(),900);
-}
+const whiteFlash=
+  document.getElementById('whiteFlash');
 
-function setStage(n){
-  stage=n;
-  game.classList.remove('stage-shift');
-  void game.offsetWidth;
-  game.classList.add('stage-shift');
-  setTimeout(()=>game.classList.remove('stage-shift'),1300);
-  game.classList.remove('stage1','stage2','stage3');
-  game.classList.add('stage'+n);
-  views.forEach((v,i)=>v.classList.toggle('active',i===n-1));
-  progress.textContent=n+' / 3';
-  stageNo.textContent='0'+n;
 
-  if(n===1){
-    gameTitle.textContent='빛을 따라';
-    gameGuide.textContent='세 마리 중 마음이 가는 한 마리를 선택해보세요';
-  }
-  if(n===2){
-    gameTitle.textContent='조금 더 가까이';
-    gameGuide.textContent='두 번째 시선이 머무는 한 마리를 선택해보세요';
-  }
-  if(n===3){
-    gameTitle.textContent='수면을 향해';
-    gameGuide.textContent='마지막으로 빛나는 한 마리를 선택해보세요';
-  }
-}
+// ==============================
+// 사진 파일 연결
+// ==============================
 
-function finish(){
-  document.getElementById('gameScreen').style.display='none';
-  document.querySelector('.top').style.display='none';
-  document.getElementById('recordScreen').classList.remove('active');
-  document.getElementById('possibility').classList.add('active');
-  document.getElementById('chosenWords').textContent=words.join(' · ');
-  document.getElementById('quote').textContent=quotes[Math.floor(Math.random()*quotes.length)];
-  window.scrollTo(0,0);
+// index.html과 사진 파일을 같은 폴더에 둡니다.
 
-  // 빛이 차오른 후 가능성 화면을 보여줍니다.
-  setTimeout(()=>{
-    whiteFlash.classList.add('fade-out');
-    whiteFlash.classList.remove('on');
-    setTimeout(()=>whiteFlash.classList.remove('fade-out'),1500);
-  },250);
-}
+const IMAGE_BASE_URL='./';
 
-allFish.forEach(f=>f.onclick=()=>{
-  if(locked||!f.closest('.view').classList.contains('active'))return;
-  locked=true;
-  f.classList.add('selected');
-  words.push(f.dataset.word);
-  makeRipple(f);
+const IMAGE_EXT='.png';
 
-  message.innerHTML='<strong>'+f.dataset.word+'을 선택했어요.</strong>'+
-    (['빛이 천천히 가까워지고 있어요.','조금 더 위로 올라가 볼까요.','마지막 빛이 당신을 기다리고 있어요.'][stage-1]);
 
-  setTimeout(()=>{
-    f.classList.add('gone');
+// 배경 이미지
 
-    if(stage<3){
-      setStage(stage+1);
-      locked=false;
-      message.innerHTML='<strong>새로운 가능성이 나타났어요.</strong>이번에는 어떤 빛에 마음이 머물까요?';
-    }else{
-      // 마지막 물고기를 누르면 화면이 하얀 빛으로 가득 차오릅니다.
-      message.innerHTML='<strong>빛이 당신을 감싸요.</strong>잠시 눈을 감고, 오늘의 가능성을 만나보세요.';
-      whiteFlash.classList.remove('fade-out');
-      whiteFlash.classList.add('on');
-      setTimeout(finish,1650);
-    }
-  },900);
+game.style.backgroundImage=
+  'linear-gradient(180deg, rgba(25,115,148,.10), rgba(2,18,43,.42)), url("'+
+  IMAGE_BASE_URL+
+  'bi'+
+  IMAGE_EXT+
+  '")';
+
+game.style.backgroundSize=
+  'cover, cover';
+
+game.style.backgroundPosition=
+  'center, center';
+
+game.style.backgroundRepeat=
+  'no-repeat, no-repeat';
+
+
+// 물고기 이미지
+
+document.querySelectorAll('.fish')
+.forEach((fish,index)=>{
+
+  fish.style.backgroundImage=
+    'url("'+
+    IMAGE_BASE_URL+
+    'f'+
+    (index+1)+
+    IMAGE_EXT+
+    '")';
+
+  fish.setAttribute(
+    'role',
+    'button'
+  );
+
+  fish.setAttribute(
+    'aria-label',
+    fish.dataset.word+
+    ' 물고기 선택'
+  );
+
 });
 
-document.getElementById('toRecord').onclick=()=>{
-  document.getElementById('possibility').classList.remove('active');
-  document.getElementById('recordScreen').classList.add('active');
+
+// ==============================
+// 게임 변수
+// ==============================
+
+const progress=
+  document.getElementById('progress');
+
+const message=
+  document.getElementById('message');
+
+const stageNo=
+  document.getElementById('stageNo');
+
+const gameTitle=
+  document.getElementById('gameTitle');
+
+const gameGuide=
+  document.getElementById('gameGuide');
+
+const views=[
+  ...document.querySelectorAll('.view')
+];
+
+
+// ==============================
+// 결과 문구
+// ==============================
+
+const quotes=[
+
+'당신 안의 작은 가능성들이 모여, 지금의 당신을 아름답게 빛냅니다.',
+
+'당신은 이미 자신만의 색으로 충분히 빛나고 있습니다.',
+
+'서로 다른 가능성을 품은 당신은 그 자체로 하나의 빛입니다.',
+
+'당신 안에는 아직 발견되지 않은 빛이 가득합니다.',
+
+'당신이 가진 가능성 하나하나가 모두 소중한 빛입니다.',
+
+'당신은 수많은 가능성을 품고 있는 빛나는 사람입니다.',
+
+'당신 안의 가능성들은 저마다 고유한 빛을 내고 있습니다.',
+
+'당신이 가진 서로 다른 빛들이 모여 지금의 당신을 만듭니다.',
+
+'당신은 이미 당신만의 가능성으로 반짝이고 있습니다.',
+
+'당신 안에 있는 작은 가능성도 그 자체로 충분히 빛납니다.',
+
+'당신의 용기와 열정은 이미 당신을 빛나게 하는 힘입니다.',
+
+'당신은 스스로 알지 못하는 순간에도 자신만의 빛을 품고 있습니다.',
+
+'당신 안의 수많은 가능성은 모두 당신을 이루는 아름다운 조각입니다.',
+
+'당신이 가진 가능성은 다른 누구와도 다른 당신만의 빛입니다.',
+
+'당신은 하나의 모습으로만 빛나는 사람이 아닙니다.',
+
+'당신 안에는 서로 다른 색의 빛이 함께 살아가고 있습니다.',
+
+'당신이 발견한 가능성마다 당신만의 빛이 담겨 있습니다.',
+
+'당신은 이미 여러 가능성이 어우러진 하나의 아름다운 빛입니다.',
+
+'당신의 작은 호기심조차 당신을 빛나게 하는 소중한 가능성입니다.',
+
+'당신 안의 빛은 하나의 색으로 설명할 수 없을 만큼 다채롭습니다.',
+
+'당신이 가진 가능성은 비교할 수 없는 당신만의 아름다움입니다.',
+
+'당신은 지금 이 순간에도 무한한 가능성을 품고 있습니다.',
+
+'당신 안의 모든 가능성은 저마다 빛날 가치가 있습니다.',
+
+'당신은 스스로 생각하는 것보다 더 많은 빛을 품고 있습니다.',
+
+'당신의 가능성은 서로 어우러져 지금 이 순간에도 반짝입니다.',
+
+'당신은 이미 자신만의 색과 빛을 가진 소중한 존재입니다.',
+
+'당신 안의 작은 빛들은 모자람 없이 저마다의 자리를 빛냅니다.',
+
+'당신이 가진 가능성들은 모두 당신이라는 빛을 이루고 있습니다.',
+
+'세 가지 가능성을 발견한 오늘, 당신 안의 다채로운 빛도 발견합니다.',
+
+'당신 안의 모든 가능성이 모여, 오직 당신만이 만들어 낼 수 있는 빛이 됩니다.'
+
+];
+
+
+let stage=1;
+let words=[];
+let locked=false;
+
+
+// ==============================
+// 물결 효과
+// ==============================
+
+function makeRipple(f){
+
+  const ripple=
+    document.createElement('span');
+
+  ripple.className='ripple';
+
+  ripple.style.left=
+    (f.offsetLeft+
+     f.offsetWidth/2-
+     12)+'px';
+
+  ripple.style.top=
+    (f.offsetTop+
+     f.offsetHeight/2-
+     12)+'px';
+
+  game.appendChild(ripple);
+
+  setTimeout(
+    ()=>ripple.remove(),
+    900
+  );
+}
+
+
+// ==============================
+// 단계 변경
+// ==============================
+
+function setStage(n){
+
+  stage=n;
+
+  game.classList.remove(
+    'stage-shift'
+  );
+
+  void game.offsetWidth;
+
+  game.classList.add(
+    'stage-shift'
+  );
+
+  setTimeout(
+    ()=>game.classList.remove(
+      'stage-shift'
+    ),
+    1300
+  );
+
+  game.classList.remove(
+    'stage1',
+    'stage2',
+    'stage3'
+  );
+
+  game.classList.add(
+    'stage'+n
+  );
+
+  views.forEach(
+    (v,i)=>
+      v.classList.toggle(
+        'active',
+        i===n-1
+      )
+  );
+
+  progress.textContent=
+    n+' / 3';
+
+  stageNo.textContent=
+    '0'+n;
+
+
+  if(n===1){
+
+    gameTitle.textContent=
+      '빛을 따라';
+
+    gameGuide.textContent=
+      '세 마리 중 마음이 가는 한 마리를 선택해보세요';
+
+  }
+
+
+  if(n===2){
+
+    gameTitle.textContent=
+      '조금 더 가까이';
+
+    gameGuide.textContent=
+      '두 번째 시선이 머무는 한 마리를 선택해보세요';
+
+  }
+
+
+  if(n===3){
+
+    gameTitle.textContent=
+      '수면을 향해';
+
+    gameGuide.textContent=
+      '마지막으로 빛나는 한 마리를 선택해보세요';
+
+  }
+
+}
+
+
+// ==============================
+// 게임 종료
+// ==============================
+
+function finish(){
+
+  document.getElementById(
+    'gameScreen'
+  ).style.display='none';
+
+  document.querySelector(
+    '.top'
+  ).style.display='none';
+
+  document.getElementById(
+    'recordScreen'
+  ).classList.remove('active');
+
+  document.getElementById(
+    'possibility'
+  ).classList.add('active');
+
+  document.getElementById(
+    'chosenWords'
+  ).textContent=
+    words.join(' · ');
+
+  document.getElementById(
+    'quote'
+  ).textContent=
+    quotes[
+      Math.floor(
+        Math.random()*
+        quotes.length
+      )
+    ];
+
   window.scrollTo(0,0);
+
+
+  setTimeout(()=>{
+
+    whiteFlash.classList.add(
+      'fade-out'
+    );
+
+    whiteFlash.classList.remove(
+      'on'
+    );
+
+    setTimeout(
+      ()=>whiteFlash.classList.remove(
+        'fade-out'
+      ),
+      1500
+    );
+
+  },250);
+
+}
+
+
+// ==============================
+// 물고기 선택
+// ==============================
+
+allFish.forEach(
+  f=>
+    f.onclick=()=>{
+
+      if(
+        locked ||
+        !f.closest('.view')
+          .classList
+          .contains('active')
+      ){
+        return;
+      }
+
+      locked=true;
+
+      f.classList.add(
+        'selected'
+      );
+
+      words.push(
+        f.dataset.word
+      );
+
+      makeRipple(f);
+
+
+      message.innerHTML=
+        '<strong>'+
+        f.dataset.word+
+        '을 선택했어요.</strong>'+
+        [
+          '빛이 천천히 가까워지고 있어요.',
+          '조금 더 위로 올라가 볼까요.',
+          '마지막 빛이 당신을 기다리고 있어요.'
+        ][stage-1];
+
+
+      setTimeout(()=>{
+
+        f.classList.add(
+          'gone'
+        );
+
+
+        if(stage<3){
+
+          setStage(
+            stage+1
+          );
+
+          locked=false;
+
+          message.innerHTML=
+            '<strong>새로운 가능성이 나타났어요.</strong>'+
+            '이번에는 어떤 빛에 마음이 머물까요?';
+
+        }else{
+
+          message.innerHTML=
+            '<strong>빛이 당신을 감싸요.</strong>'+
+            '잠시 눈을 감고, 오늘의 가능성을 만나보세요.';
+
+          whiteFlash.classList.remove(
+            'fade-out'
+          );
+
+          whiteFlash.classList.add(
+            'on'
+          );
+
+          setTimeout(
+            finish,
+            1650
+          );
+
+        }
+
+      },900);
+
+    }
+);
+
+
+// ==============================
+// 기록 화면
+// ==============================
+
+document.getElementById(
+  'toRecord'
+).onclick=()=>{
+
+  document.getElementById(
+    'possibility'
+  ).classList.remove(
+    'active'
+  );
+
+  document.getElementById(
+    'recordScreen'
+  ).classList.add(
+    'active'
+  );
+
+  window.scrollTo(0,0);
+
 };
 
-document.getElementById('backToPossibility').onclick=()=>{
-  document.getElementById('recordScreen').classList.remove('active');
-  document.getElementById('possibility').classList.add('active');
+
+document.getElementById(
+  'backToPossibility'
+).onclick=()=>{
+
+  document.getElementById(
+    'recordScreen'
+  ).classList.remove(
+    'active'
+  );
+
+  document.getElementById(
+    'possibility'
+  ).classList.add(
+    'active'
+  );
+
   window.scrollTo(0,0);
+
 };
 
-document.getElementById('reset').onclick=()=>location.reload();
-document.getElementById('again').onclick=()=>location.reload();
+
+// ==============================
+// 다시 시작
+// ==============================
+
+document.getElementById(
+  'reset'
+).onclick=
+  ()=>location.reload();
+
+
+document.getElementById(
+  'again'
+).onclick=
+  ()=>location.reload();
+
 </script>
+
 </main>
+
 </body>
 </html>
