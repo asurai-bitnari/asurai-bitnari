@@ -1,2394 +1,1407 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
 <title>오늘의 가능성</title>
 
 <style>
-
-:root{
-  --ink:#26313d;
-  --muted:#6e7b87;
-  --line:rgba(38,49,61,.14)
-}
-
 *{
-  box-sizing:border-box
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
 html,
 body{
-  margin:0;
+  width:100%;
   min-height:100%;
-  background:#e8efee;
-  color:var(--ink);
-  font-family:"Noto Sans KR",system-ui,sans-serif
+  background:#03182c;
+  font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    Arial,
+    sans-serif;
 }
 
 body{
   display:flex;
   justify-content:center;
-  -webkit-tap-highlight-color:transparent
-}
-
-.app{
-  width:100%;
-  min-height:100vh;
-  background:
-    linear-gradient(
-      180deg,
-      #eaf2f1,
-      #f7f7f4 58%,
-      #eef0f1
-    );
-  overflow:hidden
-}
-
-.top{
-  height:62px;
-  display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  border-bottom:1px solid var(--line);
-  font-size:11px;
-  letter-spacing:.12em
+  overflow:hidden;
 }
-
-.brand{
-  font-family:Georgia,serif;
-  font-size:15px
-}
-
 
 /* ========================================
-   GAME SCREEN
+   공통 화면
 ======================================== */
 
 .screen{
-  width:min(420px,calc(100% - 28px));
-  margin:22px auto
-}
-
-.game{
   position:relative;
-
-  /*
-    ★ 모바일 세로형 9:16
-  */
+  width:100%;
+  max-width:600px;
+  height:100vh;
+  max-height:1067px;
   aspect-ratio:9 / 16;
-
-  width:100%;
-
   overflow:hidden;
-
-  background:
-    linear-gradient(
-      180deg,
-      #dcecea 0%,
-      #c5dde2 46%,
-      #91b5c5 100%
-    );
-
-  box-shadow:
-    0 20px 60px rgba(54,61,72,.13);
-
-  transition:
-    background 1.2s ease,
-    transform 1s ease,
-    filter 1.2s ease
+  background:#06243c;
 }
 
-
 /* ========================================
-   전체 화면 밝기
+   첫 시작 화면
 ======================================== */
 
-.game:before{
-  content:"";
+.startScreen{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(4,27,49,.18),
+      rgba(3,20,39,.38)
+    ),
+    url("./bi.png");
+
+  background-size:cover;
+  background-position:center;
+
+  transition:opacity .8s ease,
+             transform .8s ease;
+}
+
+/* 화면 전체의 은은한 빛 */
+
+.startScreen::before{
+  content:"";
   position:absolute;
   inset:0;
 
   background:
     radial-gradient(
-      ellipse at 50% 5%,
-      rgba(194,247,255,.28),
-      transparent 38%
-    ),
-    linear-gradient(
-      180deg,
-      rgba(9,73,108,.025),
-      rgba(2,19,43,.08)
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.05),
-      transparent 45%,
-      rgba(5,26,48,.025)
+      circle at 50% 42%,
+      rgba(255,255,255,.22) 0%,
+      rgba(255,255,255,.10) 16%,
+      rgba(255,255,255,.03) 35%,
+      transparent 62%
     );
 
-  z-index:1;
   pointer-events:none;
-
-  transition:
-    opacity 1.2s ease
 }
 
+/* 아래쪽 물빛 */
 
-/*
-  ★ 단계가 올라갈수록 밝아짐
-*/
-
-.game.stage1{
-  filter:brightness(1)
-}
-
-.game.stage2{
-  filter:brightness(1.055)
-}
-
-.game.stage3{
-  filter:brightness(1.11)
-}
-
-
-/* ========================================
-   아래쪽 물빛
-======================================== */
-
-.game:after{
+.startScreen::after{
   content:"";
-
   position:absolute;
-
-  left:-10%;
-  right:-10%;
-  bottom:-5%;
-
-  height:28%;
-
-  border-radius:50% 50% 0 0;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(169,239,255,.12),
-      rgba(3,26,55,.12)
-    );
-
-  filter:blur(12px);
-
-  animation:wave 5s ease-in-out infinite;
-
-  z-index:2;
-
-  pointer-events:none
-}
-
-.game.stage-shift{
-  animation:underwaterShift 1.25s ease-in-out
-}
-
-@keyframes underwaterShift{
-
-  0%{
-    transform:translateY(0) scale(1)
-  }
-
-  35%{
-    transform:translateY(-10px) scale(1.012)
-  }
-
-  70%{
-    transform:translateY(-5px) scale(1.006)
-  }
-
-  100%{
-    transform:translateY(0) scale(1)
-  }
-
-}
-
-
-/* ========================================
-   상단 제목 영역
-======================================== */
-
-.title{
-  position:absolute;
-
-  top:7%;
-
-  left:8%;
-  right:8%;
-
-  text-align:center;
-
-  z-index:10
-}
-
-.title h1{
-  font:
-    400 clamp(27px,7vw,40px)
-    Georgia,serif;
-
-  margin:0 0 7px
-}
-
-
-/*
-  ★ 영어 문구
-*/
-
-.viewLabel{
-  position:absolute;
-
-  top:15.5%;
-
-  left:8%;
-  right:8%;
-
-  text-align:center;
-
-  font-size:10px;
-
-  letter-spacing:.16em;
-
-  color:#637687;
-
-  z-index:10
-}
-
-
-/*
-  ★ 한글 안내문
-  기존 위쪽 gameGuide를
-  영어 문구 아래로 배치
-*/
-
-.gameGuide{
-  position:absolute;
-
-  top:19%;
-
-  left:7%;
-  right:7%;
-
-  text-align:center;
-
-  font-size:11px;
-
-  line-height:1.7;
-
-  color:#526675;
-
-  z-index:10;
-
-  margin:0
-}
-
-
-/*
-  단계 번호
-*/
-
-.progress{
-  position:absolute;
-
-  right:6%;
-  top:3.5%;
-
-  font-size:10px;
-
-  color:#687689;
-
-  z-index:10
-}
-
-
-/* ========================================
-   VIEW
-======================================== */
-
-.view{
-  position:absolute;
-
-  inset:0;
-
-  z-index:3;
-
-  opacity:0;
-
-  pointer-events:none;
-
-  transition:
-    opacity .7s ease,
-    transform 1s ease
-}
-
-.view.active{
-  opacity:1;
-  pointer-events:auto
-}
-
-.view2,
-.view3{
-  transform:translateY(35px)
-}
-
-.view2.active,
-.view3.active{
-  transform:translateY(0)
-}
-
-.view1:not(.active),
-.view2:not(.active),
-.view3:not(.active){
-  transform:translateY(-45px)
-}
-
-
-/* ========================================
-   FISH
-======================================== */
-
-.fish{
-  position:absolute;
-
-  width:88px;
-  height:66px;
-
-  border-radius:0;
-
-  background-color:transparent;
-
-  cursor:pointer;
-
-  z-index:6;
-
-  filter:
-    drop-shadow(
-      0 7px 8px rgba(61,91,108,.20)
-    );
-
-  transition:
-    transform .9s cubic-bezier(.2,.8,.2,1),
-    opacity .5s,
-    filter .5s
-}
-
-.fish img{
-  width:100%;
-  height:100%;
-
-  object-fit:contain;
-
-  display:block;
-
-  pointer-events:none;
-
-  user-select:none
-}
-
-.fish .fin,
-.fish .fin2{
-  display:none
-}
-
-.fish .spark{
-  position:absolute;
-
-  left:-14px;
-  top:8px;
-
-  width:4px;
-  height:4px;
-
-  border-radius:50%;
-
-  background:rgba(255,255,255,.8);
-
-  box-shadow:
-    11px -11px 0 rgba(255,255,255,.45),
-    -5px 12px 0 rgba(255,255,255,.35);
-
-  animation:sparkle 2s ease-in-out infinite
-}
-
-.fish:hover{
-  transform:
-    scale(1.08)
-    rotate(-2deg);
-
-  filter:
-    drop-shadow(
-      0 10px 13px rgba(61,91,108,.22)
-    )
-}
-
-.fish.selected{
-  animation:
-    chooseFish 1.3s ease forwards
-}
-
-.fish.gone{
-  opacity:0;
-
-  transform:
-    scale(.45)
-    translateY(-45px)
-}
-
-
-/* ========================================
-   물고기 위치
-   ★ 서로 간격을 더 넓게
-======================================== */
-
-
-/* 1단계 */
-
-.f1{
-  left:8%;
-  top:39%;
-
-  animation:
-    floatFish 4.2s ease-in-out infinite
-}
-
-.f2{
-  left:50%;
-  top:33%;
-
-  animation:
-    floatFish 4.7s ease-in-out -1.2s infinite
-}
-
-.f3{
-  right:7%;
-  top:46%;
-
-  animation:
-    floatFish 4.4s ease-in-out -2.3s infinite
-}
-
-
-/* 2단계 */
-
-.f4{
-  left:7%;
-  top:48%;
-
-  animation:
-    floatFish 4.6s ease-in-out -.8s infinite
-}
-
-.f5{
-  left:49%;
-  top:41%;
-
-  animation:
-    floatFish 4.1s ease-in-out -1.8s infinite
-}
-
-.f6{
-  right:6%;
-  top:54%;
-
-  animation:
-    floatFish 4.9s ease-in-out -2.7s infinite
-}
-
-
-/* 3단계 */
-
-.f7{
-  left:7%;
-  top:57%;
-
-  animation:
-    floatFish 4.5s ease-in-out -1.1s infinite
-}
-
-.f8{
-  left:50%;
-  top:49%;
-
-  animation:
-    floatFish 4.3s ease-in-out -2.2s infinite
-}
-
-.f9{
-  right:7%;
-  top:60%;
-
-  animation:
-    floatFish 4.8s ease-in-out -.5s infinite
-}
-
-
-/* ========================================
-   가운데 빛
-   ★ 끊기는 느낌 제거
-======================================== */
-
-.light{
-  position:absolute;
-
-  left:17%;
-  top:-10%;
-
-  width:66%;
-  height:82%;
-
-  /*
-    위쪽은 밝고
-    아래로 갈수록 자연스럽게 사라짐
-  */
-  background:
-    radial-gradient(
-      ellipse at 50% 5%,
-      rgba(255,255,255,.95) 0%,
-      rgba(255,250,232,.72) 24%,
-      rgba(255,244,222,.38) 48%,
-      rgba(255,244,222,.16) 68%,
-      rgba(255,244,222,0) 100%
-    );
-
-  filter:blur(10px);
-
-  opacity:.72;
-
-  animation:
-    breathe 4s ease-in-out infinite;
-
-  z-index:2;
-
-  pointer-events:none
-}
-
-
-/* ========================================
-   GLOW
-======================================== */
-
-.choiceGlow{
-  position:absolute;
-
-  width:150px;
-  height:150px;
-
-  border-radius:50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,255,255,.50),
-      rgba(255,206,238,.10),
-      transparent 70%
-    );
-
-  filter:blur(4px);
-
-  opacity:0;
-
-  z-index:4;
-
-  pointer-events:none
-}
-
-.g1{
-  left:0%;
-  top:32%
-}
-
-.g2{
-  left:38%;
-  top:28%
-}
-
-.g3{
-  right:0%;
-  top:38%
-}
-
-.game.stage2 .g1,
-.game.stage2 .g2,
-.game.stage2 .g3{
-  opacity:.55;
-
-  animation:
-    glowPulse 2.2s ease-in-out infinite
-}
-
-.game.stage3 .g1,
-.game.stage3 .g2,
-.game.stage3 .g3{
-  opacity:.7;
-
-  animation:
-    glowPulse 1.8s ease-in-out infinite
-}
-
-
-/* ========================================
-   ★ 아래쪽 메시지 삭제
-========================================
-
-기존 .message는 더 이상 사용하지 않습니다.
-*/
-
-
-/* ========================================
-   EYE
-======================================== */
-
-.eyeView{
-  position:absolute;
-
-  left:50%;
-  bottom:0;
-
-  width:150px;
-  height:95px;
-
-  transform:translateX(-50%);
-
-  z-index:8;
-
-  pointer-events:none
-}
-
-.eyeView:before{
-  content:"";
-
-  position:absolute;
-
-  left:50%;
-  bottom:-30px;
-
-  width:210px;
-  height:100px;
-
-  transform:translateX(-50%);
-
-  border-radius:50% 50% 0 0;
+  left:-20%;
+  bottom:-12%;
+  width:140%;
+  height:42%;
 
   background:
     radial-gradient(
       ellipse at center,
-      rgba(44,71,85,.06),
-      transparent 68%
+      rgba(98,220,255,.20),
+      rgba(20,120,170,.08) 42%,
+      transparent 72%
     );
 
-  filter:blur(8px)
+  pointer-events:none;
 }
 
-.eyeView:after{
-  content:"";
+/* ========================================
+   반짝이는 빛
+======================================== */
 
+.sparkle{
   position:absolute;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
 
+  box-shadow:
+    0 0 7px rgba(255,255,255,.9),
+    0 0 16px rgba(134,231,255,.75);
+
+  animation:sparkleFloat 3.5s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.sparkle::before,
+.sparkle::after{
+  content:"";
+  position:absolute;
   left:50%;
-  bottom:-15px;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(255,255,255,.75);
+}
 
-  width:75px;
-  height:44px;
+.sparkle::before{
+  width:1px;
+  height:18px;
+}
 
-  transform:translateX(-50%);
+.sparkle::after{
+  width:18px;
+  height:1px;
+}
 
-  border-radius:50% 50% 45% 45%;
+.s1{
+  left:18%;
+  top:25%;
+  animation-delay:0s;
+}
+
+.s2{
+  left:77%;
+  top:22%;
+  animation-delay:1.2s;
+  transform:scale(.7);
+}
+
+.s3{
+  left:27%;
+  top:63%;
+  animation-delay:2.1s;
+  transform:scale(.55);
+}
+
+.s4{
+  left:83%;
+  top:57%;
+  animation-delay:.7s;
+  transform:scale(.8);
+}
+
+.s5{
+  left:66%;
+  top:72%;
+  animation-delay:1.8s;
+  transform:scale(.5);
+}
+
+.s6{
+  left:11%;
+  top:48%;
+  animation-delay:2.7s;
+  transform:scale(.65);
+}
+
+@keyframes sparkleFloat{
+  0%,
+  100%{
+    opacity:.25;
+    transform:scale(.65);
+  }
+
+  50%{
+    opacity:1;
+    transform:scale(1.15);
+  }
+}
+
+/* ========================================
+   시작 화면 텍스트
+======================================== */
+
+.startContent{
+  position:relative;
+  z-index:5;
+
+  width:88%;
+  text-align:center;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.startEnglish{
+  margin-bottom:14px;
+
+  font-size:clamp(11px,2.7vw,15px);
+  letter-spacing:.32em;
+  font-weight:400;
+
+  color:rgba(255,255,255,.78);
+
+  text-shadow:
+    0 0 12px rgba(120,225,255,.45);
+}
+
+.startTitle{
+  font-size:clamp(34px,9vw,58px);
+  font-weight:500;
+  letter-spacing:.08em;
+
+  color:#fff;
+
+  text-shadow:
+    0 0 12px rgba(255,255,255,.55),
+    0 0 28px rgba(101,224,255,.4);
+
+  margin-bottom:18px;
+}
+
+.startSubtitle{
+  font-size:clamp(13px,3.5vw,18px);
+  line-height:1.9;
+  letter-spacing:.04em;
+
+  color:rgba(255,255,255,.88);
+
+  margin-bottom:42px;
+}
+
+/* 시작 버튼 */
+
+.startButton{
+  position:relative;
+
+  width:min(220px,62vw);
+  height:58px;
+
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:40px;
 
   background:
     linear-gradient(
-      160deg,
-      rgba(72,96,112,.55),
-      rgba(126,112,151,.25)
+      180deg,
+      rgba(255,255,255,.16),
+      rgba(255,255,255,.06)
     );
 
-  filter:blur(2px);
+  color:#fff;
 
-  clip-path:
-    polygon(
-      50% 0,
-      85% 100%,
-      15% 100%
-    )
+  font-size:15px;
+  letter-spacing:.12em;
+
+  cursor:pointer;
+
+  backdrop-filter:blur(8px);
+
+  box-shadow:
+    0 0 20px rgba(116,225,255,.18),
+    inset 0 0 20px rgba(255,255,255,.05);
+
+  transition:
+    transform .25s ease,
+    background .25s ease,
+    box-shadow .25s ease;
 }
 
-
-/* ========================================
-   BUTTON
-======================================== */
-
-.btn{
-  border:
-    1px solid rgba(44,48,64,.2);
+.startButton:hover{
+  transform:translateY(-2px);
 
   background:
-    rgba(250,250,248,.8);
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.23),
+      rgba(255,255,255,.09)
+    );
 
-  color:var(--ink);
-
-  padding:11px 19px;
-
-  border-radius:999px;
-
-  font-size:12px;
-
-  cursor:pointer
+  box-shadow:
+    0 0 28px rgba(116,225,255,.32),
+    inset 0 0 20px rgba(255,255,255,.08);
 }
 
-.primary{
-  background:#303746;
-
-  color:white;
-
-  border-color:#303746
+.startButton:active{
+  transform:scale(.97);
 }
-
-.center{
-  display:flex;
-
-  justify-content:center;
-
-  margin-top:14px
-}
-
 
 /* ========================================
-   POSSIBILITY / RECORD
+   게임 화면
 ======================================== */
 
-.special{
+.game{
   display:none;
+  position:relative;
 
-  min-height:calc(100vh - 62px);
+  width:100%;
+  height:100%;
 
-  align-items:center;
+  aspect-ratio:9 / 16;
 
-  justify-content:center;
+  overflow:hidden;
 
-  padding:22px 16px
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(25,115,148,.10),
+      rgba(2,18,43,.30)
+    ),
+    url("./bi.png");
+
+  background-size:cover;
+  background-position:center;
+
+  isolation:isolate;
 }
 
-.special.active{
-  display:flex
+/* 화면 밝기 */
+
+.game.stage1{
+  filter:brightness(1);
 }
 
-.card{
-  width:min(620px,100%);
+.game.stage2{
+  filter:brightness(1.055);
+}
+
+.game.stage3{
+  filter:brightness(1.11);
+}
+
+/* 게임 위쪽 부드러운 빛 */
+
+.game::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 16%,
+      rgba(255,255,255,.12),
+      rgba(255,255,255,.035) 28%,
+      transparent 58%
+    );
+
+  pointer-events:none;
+  z-index:0;
+}
+
+/* 아래쪽 자연스러운 물빛 */
+
+.game::after{
+  content:"";
+  position:absolute;
+  left:-25%;
+  bottom:-15%;
+
+  width:150%;
+  height:50%;
+
+  background:
+    radial-gradient(
+      ellipse at center bottom,
+      rgba(99,225,255,.20) 0%,
+      rgba(60,174,215,.10) 34%,
+      rgba(20,100,145,.035) 58%,
+      transparent 78%
+    );
+
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ========================================
+   단계 상단
+======================================== */
+
+.stageHeader{
+  position:absolute;
+  z-index:10;
+
+  left:0;
+  top:5.5%;
+
+  width:100%;
 
   text-align:center;
 
-  background:
-    rgba(250,250,248,.82);
-
-  padding:46px 24px;
-
-  box-shadow:
-    0 20px 55px rgba(54,61,72,.09)
+  pointer-events:none;
 }
 
-.small{
-  font-size:10px;
+.stageTitle{
+  font-size:clamp(21px,5.5vw,34px);
+  font-weight:400;
 
-  letter-spacing:.22em;
+  letter-spacing:.13em;
 
-  color:var(--muted);
+  color:rgba(255,255,255,.95);
 
-  margin-bottom:12px
+  text-shadow:
+    0 0 12px rgba(255,255,255,.45);
 }
 
-.card .possibilityWords{
-  display:block;
+.viewLabel{
+  margin-top:11px;
 
-  font-size:12px;
+  font-size:clamp(9px,2.4vw,13px);
+  letter-spacing:.25em;
 
-  letter-spacing:.08em;
+  color:rgba(255,255,255,.62);
 
-  line-height:1.8;
-
-  color:#687689;
-
-  margin:0 auto 22px
+  text-shadow:
+    0 0 10px rgba(110,220,255,.35);
 }
-
-.quote{
-  font:
-    400 clamp(18px,4.2vw,27px)/1.6
-    Georgia,serif;
-
-  margin:0 auto 30px;
-
-  max-width:520px
-}
-
-.sub{
-  font-size:12px;
-
-  color:var(--muted);
-
-  line-height:1.9;
-
-  margin-bottom:24px
-}
-
-.reminder{
-  font-size:11px;
-
-  margin:-12px auto 24px
-}
-
-.guest{
-  display:block;
-
-  margin-top:28px
-}
-
-.guest iframe{
-  width:100%;
-
-  height:520px;
-
-  border:0;
-
-  background:white
-}
-
-.notice{
-  font-size:10px;
-
-  color:var(--muted);
-
-  margin-top:9px
-}
-
-.back{
-  margin-top:18px
-}
-
 
 /* ========================================
-   TRANSITION
+   중앙 빛
 ======================================== */
 
-.white-flash{
-  position:fixed;
+.light{
+  position:absolute;
+  z-index:1;
 
-  inset:0;
+  left:50%;
+  top:22%;
 
-  z-index:9999;
+  transform:translateX(-50%);
+
+  width:86%;
+  height:46%;
 
   pointer-events:none;
 
   background:
     radial-gradient(
-      ellipse at 50% 48%,
-      #fff 0%,
-      rgba(255,255,255,.99) 35%,
-      rgba(255,255,255,.94) 70%,
-      #fff 100%
+      ellipse at center 12%,
+      rgba(255,255,255,.42) 0%,
+      rgba(220,248,255,.27) 13%,
+      rgba(145,225,248,.13) 29%,
+      rgba(89,180,218,.065) 45%,
+      rgba(30,100,145,.025) 60%,
+      transparent 76%
     );
 
-  opacity:0;
-
-  transition:
-    opacity 1.35s ease
+  filter:blur(1px);
 }
 
-.white-flash.on{
-  opacity:1
-}
+/* ========================================
+   물고기
+======================================== */
 
-.white-flash.fade-out{
-  opacity:0;
-
-  transition:
-    opacity 1.45s ease
-}
-
-.rainbow{
+.fish{
   position:absolute;
+  z-index:5;
 
-  inset:-20%;
+  width:25%;
+  max-width:145px;
 
-  z-index:30;
+  cursor:pointer;
+
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-tap-highlight-color:transparent;
+
+  transition:
+    transform .35s ease,
+    filter .35s ease,
+    opacity .35s ease;
+}
+
+.fish img{
+  display:block;
+  width:100%;
+  height:auto;
+
+  filter:
+    drop-shadow(0 0 8px rgba(116,226,255,.24));
+}
+
+.fish:hover{
+  transform:scale(1.07);
+  filter:brightness(1.08);
+}
+
+/* 세 마리 위치 */
+
+.f1,
+.f4,
+.f7{
+  left:8%;
+}
+
+.f2,
+.f5,
+.f8{
+  left:37.5%;
+}
+
+.f3,
+.f6,
+.f9{
+  right:8%;
+}
+
+/* 1단계 */
+
+.f1,
+.f2,
+.f3{
+  top:40%;
+}
+
+/* 2단계 */
+
+.f4,
+.f5,
+.f6{
+  top:43%;
+}
+
+/* 3단계 */
+
+.f7,
+.f8,
+.f9{
+  top:46%;
+}
+
+/* ========================================
+   맨 아래 안내 문구
+======================================== */
+
+.gameGuide{
+  position:absolute;
+  z-index:10;
+
+  left:0;
+  bottom:7.5%;
+
+  width:100%;
+
+  padding:0 22px;
+
+  text-align:center;
+
+  font-size:clamp(12px,3.2vw,16px);
+  line-height:1.7;
+
+  letter-spacing:.05em;
+
+  color:rgba(255,255,255,.9);
+
+  text-shadow:
+    0 1px 5px rgba(0,20,40,.9),
+    0 0 12px rgba(0,30,55,.75);
+
+  pointer-events:none;
+}
+
+/* ========================================
+   선택 메시지
+======================================== */
+
+.selectionMessage{
+  position:absolute;
+  z-index:20;
+
+  left:50%;
+  top:70%;
+
+  width:88%;
+
+  transform:
+    translate(-50%, -50%)
+    scale(.92);
+
+  text-align:center;
+
+  opacity:0;
 
   pointer-events:none;
 
-  opacity:0;
+  color:#fff;
 
-  background:
-    conic-gradient(
-      from 180deg,
-      rgba(255,182,211,.0),
-      rgba(255,182,211,.58),
-      rgba(255,235,166,.55),
-      rgba(171,238,205,.5),
-      rgba(170,215,255,.58),
-      rgba(213,181,255,.52),
-      rgba(255,182,211,.0)
-    );
+  text-shadow:
+    0 0 10px rgba(255,255,255,.7),
+    0 0 24px rgba(103,223,255,.45);
 
-  filter:blur(18px);
-
-  mix-blend-mode:screen
+  transition:
+    opacity .35s ease,
+    transform .35s ease;
 }
 
-.surface{
-  position:absolute;
+.selectionMessage.show{
+  opacity:1;
 
-  left:-8%;
-  right:-8%;
-
-  top:78%;
-
-  height:2px;
-
-  background:
-    rgba(255,255,255,.8);
-
-  box-shadow:
-    0 0 18px rgba(255,255,255,.75);
-
-  z-index:25;
-
-  opacity:0
+  transform:
+    translate(-50%, -50%)
+    scale(1);
 }
 
-.sparkles{
-  position:absolute;
+.selectionMessage strong{
+  display:block;
 
-  inset:0;
+  font-size:clamp(18px,5vw,27px);
+  font-weight:400;
 
-  z-index:28;
-
-  pointer-events:none
+  letter-spacing:.08em;
 }
 
-.sparkles i{
-  position:absolute;
+/* ========================================
+   선택된 물고기
+======================================== */
 
-  width:4px;
-  height:4px;
+.fish.selected{
+  transform:scale(1.16);
+
+  filter:
+    brightness(1.25)
+    drop-shadow(0 0 18px rgba(180,245,255,.8));
+}
+
+.fish.dimmed{
+  opacity:.28;
+  filter:blur(1px);
+}
+
+/* ========================================
+   작은 빛 알갱이
+======================================== */
+
+.particle{
+  position:absolute;
+  z-index:30;
+
+  width:5px;
+  height:5px;
 
   border-radius:50%;
 
-  background:white;
+  background:rgba(255,255,255,.95);
 
   box-shadow:
-    0 0 12px white;
+    0 0 8px rgba(255,255,255,.9),
+    0 0 18px rgba(110,225,255,.8);
 
-  opacity:0
+  pointer-events:none;
+
+  animation:
+    particleUp 1.2s ease-out forwards;
 }
 
-.s1{
-  left:15%;
-  bottom:15%
-}
-
-.s2{
-  left:28%;
-  bottom:28%;
-
-  animation-delay:.15s
-}
-
-.s3{
-  left:43%;
-  bottom:18%;
-
-  animation-delay:.3s
-}
-
-.s4{
-  left:59%;
-  bottom:25%;
-
-  animation-delay:.45s
-}
-
-.s5{
-  left:76%;
-  bottom:16%;
-
-  animation-delay:.6s
-}
-
-.s6{
-  left:84%;
-  bottom:36%;
-
-  animation-delay:.75s
-}
-
-
-/* ========================================
-   ANIMATION
-======================================== */
-
-@keyframes floatFish{
-
-  0%,100%{
-    transform:
-      translate3d(0,0,0)
-      rotate(0deg)
-  }
-
-  50%{
-    transform:
-      translate3d(8px,-12px,0)
-      rotate(-3deg)
-  }
-
-}
-
-@keyframes chooseFish{
-
+@keyframes particleUp{
   0%{
-    transform:scale(1)
+    opacity:0;
+    transform:translate(0,0) scale(.4);
   }
 
-  35%{
-    transform:
-      scale(1.16)
-      rotate(-5deg);
-
-    filter:
-      brightness(1.25)
-      drop-shadow(
-        0 0 22px
-        rgba(255,255,255,.8)
-      )
+  15%{
+    opacity:1;
   }
 
   100%{
-    transform:
-      translateY(-155px)
-      scale(.72);
-
-    opacity:0
-  }
-
-}
-
-@keyframes sparkle{
-
-  0%,100%{
-    opacity:.25;
-    transform:scale(.7)
-  }
-
-  50%{
-    opacity:1;
-    transform:scale(1.25)
-  }
-
-}
-
-@keyframes breathe{
-
-  0%,100%{
-    opacity:.50;
-    transform:scaleX(.94)
-  }
-
-  50%{
-    opacity:.82;
-    transform:scaleX(1.05)
-  }
-
-}
-
-@keyframes wave{
-
-  0%,100%{
-    transform:
-      translateX(-2%)
-      rotate(-1deg)
-  }
-
-  50%{
-    transform:
-      translateX(2%)
-      rotate(1deg)
-  }
-
-}
-
-@keyframes glowPulse{
-
-  0%,100%{
-    transform:scale(.8);
-    opacity:.35
-  }
-
-  50%{
-    transform:scale(1.12);
-    opacity:.75
-  }
-
-}
-
-@keyframes ripple{
-
-  to{
-    width:150px;
-    height:150px;
-
     opacity:0;
-
     transform:
-      translate(-63px,-63px)
+      translate(
+        var(--dx),
+        var(--dy)
+      )
+      scale(0);
   }
-
 }
-
 
 /* ========================================
-   MOBILE
+   마지막 기록 화면
 ======================================== */
 
-@media(max-width:600px){
+.recordScreen{
+  display:none;
 
-  .top{
-    height:56px;
+  position:absolute;
+  inset:0;
 
-    padding:0 15px
-  }
+  z-index:50;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3,27,48,.78),
+      rgba(2,17,34,.9)
+    ),
+    url("./bi.png");
+
+  background-size:cover;
+  background-position:center;
+
+  overflow:auto;
+
+  padding:8% 7%;
+}
+
+.recordInner{
+  width:100%;
+  min-height:100%;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.recordTitle{
+  margin-top:3%;
+
+  color:#fff;
+
+  font-size:clamp(24px,6vw,38px);
+  font-weight:400;
+
+  letter-spacing:.12em;
+
+  text-align:center;
+}
+
+.recordText{
+  margin-top:16px;
+  margin-bottom:28px;
+
+  color:rgba(255,255,255,.8);
+
+  font-size:clamp(12px,3.3vw,16px);
+  line-height:1.8;
+
+  text-align:center;
+}
+
+.formWrap{
+  width:100%;
+  max-width:520px;
+
+  background:rgba(255,255,255,.96);
+  border-radius:18px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 0 35px rgba(0,0,0,.3);
+}
+
+.formWrap iframe{
+  display:block;
+
+  width:100%;
+  height:720px;
+
+  border:0;
+}
+
+/* ========================================
+   PC
+======================================== */
+
+@media (min-width:601px){
 
   .screen{
-    width:calc(100% - 20px);
-
-    margin:12px auto
-  }
-
-  .game{
-    /*
-      ★ 휴대폰에서도 정확히 세로 9:16
-    */
-    aspect-ratio:9 / 16;
-  }
-
-  .title{
-    top:7%;
-  }
-
-  .title h1{
-    font-size:29px;
-
-    margin-bottom:6px
-  }
-
-  .viewLabel{
-    top:15.5%;
-
-    font-size:9px
-  }
-
-  .gameGuide{
-    top:19.5%;
-
-    font-size:10px;
-
-    line-height:1.6;
-
-    left:8%;
-    right:8%
+    border-radius:0;
   }
 
   .fish{
-    width:78px;
-    height:58px
+    width:22%;
   }
 
-  /*
-    모바일에서는 물고기를
-    조금 더 넓게 벌림
-  */
-
-  .f1{
-    left:4%;
-    top:38%
-  }
-
-  .f2{
-    left:42%;
-    top:31%
-  }
-
-  .f3{
-    right:3%;
-    top:44%
-  }
-
-  .f4{
-    left:3%;
-    top:47%
-  }
-
-  .f5{
-    left:42%;
-    top:40%
-  }
-
-  .f6{
-    right:2%;
-    top:53%
-  }
-
+  .f1,
+  .f4,
   .f7{
-    left:3%;
-    top:56%
+    left:10%;
   }
 
-  .f8{
-    left:42%;
-    top:48%
-  }
-
+  .f3,
+  .f6,
   .f9{
-    right:3%;
-    top:59%
+    right:10%;
   }
-
-  .light{
-    left:8%;
-    width:84%;
-
-    top:-8%;
-
-    height:76%
-  }
-
-  .choiceGlow{
-    width:120px;
-    height:120px
-  }
-
-  .eyeView{
-    transform:
-      translateX(-50%)
-      scale(.72);
-
-    transform-origin:
-      bottom center
-  }
-
-  .card{
-    padding:38px 18px
-  }
-
-  .guest iframe{
-    height:500px
-  }
-
 }
-
 
 /* ========================================
-   VERY SMALL PHONES
+   작은 휴대폰
 ======================================== */
 
-@media(max-width:380px){
+@media (max-width:380px){
 
-  .title{
-    top:6%
+  .stageHeader{
+    top:4.5%;
   }
 
-  .title h1{
-    font-size:26px
+  .stageTitle{
+    font-size:21px;
   }
 
   .viewLabel{
-    top:15%
-  }
-
-  .gameGuide{
-    top:19%
+    margin-top:8px;
+    font-size:9px;
   }
 
   .fish{
-    width:70px;
-    height:52px
+    width:24%;
   }
 
-  .f1{
-    left:2%
-  }
-
-  .f2{
-    left:40%
-  }
-
+  .f1,
+  .f2,
   .f3{
-    right:1%
+    top:39%;
   }
 
-  .f4{
-    left:1%
-  }
-
-  .f5{
-    left:40%
-  }
-
+  .f4,
+  .f5,
   .f6{
-    right:0%
+    top:42%;
   }
 
-  .f7{
-    left:1%
-  }
-
-  .f8{
-    left:40%
-  }
-
+  .f7,
+  .f8,
   .f9{
-    right:1%
+    top:45%;
   }
 
+  .gameGuide{
+    bottom:6%;
+    font-size:12px;
+  }
 }
-
 </style>
 </head>
 
-
 <body>
 
+<!-- ========================================
+     첫 시작 화면
+======================================== -->
 
-<div
-  class="white-flash"
-  id="whiteFlash"
-  aria-hidden="true">
+<div class="screen startScreen" id="startScreen">
+
+  <!-- 반짝이 -->
+  <span class="sparkle s1"></span>
+  <span class="sparkle s2"></span>
+  <span class="sparkle s3"></span>
+  <span class="sparkle s4"></span>
+  <span class="sparkle s5"></span>
+  <span class="sparkle s6"></span>
+
+  <div class="startContent">
+
+    <div class="startEnglish">
+      TODAY'S POSSIBILITY
+    </div>
+
+    <div class="startTitle">
+      오늘의 가능성
+    </div>
+
+    <div class="startSubtitle">
+      지금, 당신의 시선이 머무는 곳에서<br>
+      새로운 가능성을 만나보세요.
+    </div>
+
+    <button
+      class="startButton"
+      id="startButton"
+      type="button">
+      시작하기
+    </button>
+
+  </div>
 </div>
 
 
-<main class="app">
-
-
 <!-- ========================================
-     HEADER
+     게임 화면
 ======================================== -->
 
-<header class="top">
+<div class="screen game stage1" id="game">
 
-  <div class="brand">
-    오늘의 가능성
-  </div>
+  <!-- 단계 상단 -->
+  <div class="stageHeader">
 
-  <div id="stageNo">
-    01
-  </div>
+    <div class="stageTitle" id="stageTitle">
+      빛을 따라
+    </div>
 
-</header>
+    <div class="viewLabel" id="viewLabel">
+      YOUR FIRST GAZE
+    </div>
 
-
-
-<!-- ========================================
-     GAME
-======================================== -->
-
-<section
-  class="screen"
-  id="gameScreen">
-
-
-<div
-  class="game"
-  id="game">
-
-
-<!-- 제목 -->
-
-<div class="title">
-
-  <h1 id="gameTitle">
-    빛을 따라
-  </h1>
-
-</div>
-
-
-<!-- 단계 번호 -->
-
-<div
-  class="progress"
-  id="progress">
-
-  1 / 3
-
-</div>
-
-
-<!-- 가운데 빛 -->
-
-<div class="light"></div>
-
-
-<!-- ========================================
-     STAGE 1
-======================================== -->
-
-<div
-  class="view view1 active">
-
-
-  <div class="viewLabel">
-    YOUR FIRST GAZE
   </div>
 
 
-  <p
+  <!-- 중앙 빛 -->
+  <div class="light"></div>
+
+
+  <!-- =====================================
+       1단계
+  ====================================== -->
+
+  <div class="fish f1" data-word="용기">
+    <img src="./f1.png" alt="용기">
+  </div>
+
+  <div class="fish f2" data-word="열정">
+    <img src="./f2.png" alt="열정">
+  </div>
+
+  <div class="fish f3" data-word="호기심">
+    <img src="./f3.png" alt="호기심">
+  </div>
+
+
+  <!-- =====================================
+       2단계
+  ====================================== -->
+
+  <div class="fish f4" data-word="자신감" style="display:none;">
+    <img src="./f4.png" alt="자신감">
+  </div>
+
+  <div class="fish f5" data-word="의지" style="display:none;">
+    <img src="./f5.png" alt="의지">
+  </div>
+
+  <div class="fish f6" data-word="희망" style="display:none;">
+    <img src="./f6.png" alt="희망">
+  </div>
+
+
+  <!-- =====================================
+       3단계
+  ====================================== -->
+
+  <div class="fish f7" data-word="도전" style="display:none;">
+    <img src="./f7.png" alt="도전">
+  </div>
+
+  <div class="fish f8" data-word="창의성" style="display:none;">
+    <img src="./f8.png" alt="창의성">
+  </div>
+
+  <div class="fish f9" data-word="끈기" style="display:none;">
+    <img src="./f9.png" alt="끈기">
+  </div>
+
+
+  <!-- 선택 결과 -->
+  <div
+    class="selectionMessage"
+    id="selectionMessage">
+  </div>
+
+
+  <!-- 맨 아래 안내 -->
+  <div
     class="gameGuide"
     id="gameGuide">
-
     세 마리 중 마음이 가는 한 마리를 선택해보세요
+  </div>
 
-  </p>
 
-
+  <!-- 마지막 기록 -->
   <div
-    class="fish f1"
-    data-word="용기">
+    class="recordScreen"
+    id="recordScreen">
 
-    <img
-      src="./f1.png"
-      alt="용기">
+    <div class="recordInner">
 
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
+      <div class="recordTitle">
+        오늘의 가능성
+      </div>
 
-  </div>
+      <div class="recordText">
+        당신이 발견한 가능성을<br>
+        자유롭게 남겨주세요.
+      </div>
 
+      <div class="formWrap">
 
-  <div
-    class="fish f2"
-    data-word="열정">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
+          loading="lazy">
+          로드 중…
+        </iframe>
 
-    <img
-      src="./f2.png"
-      alt="열정">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-
-  <div
-    class="fish f3"
-    data-word="호기심">
-
-    <img
-      src="./f3.png"
-      alt="호기심">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-</div>
-
-
-
-<!-- ========================================
-     STAGE 2
-======================================== -->
-
-<div
-  class="view view2">
-
-
-  <div class="viewLabel">
-    A LITTLE CLOSER
-  </div>
-
-
-  <p class="gameGuide">
-
-    두 번째 시선이 머무는 한 마리를 선택해보세요
-
-  </p>
-
-
-  <div
-    class="fish f4"
-    data-word="자신감">
-
-    <img
-      src="./f4.png"
-      alt="자신감">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-
-  <div
-    class="fish f5"
-    data-word="의지">
-
-    <img
-      src="./f5.png"
-      alt="의지">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-
-  <div
-    class="fish f6"
-    data-word="희망">
-
-    <img
-      src="./f6.png"
-      alt="희망">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-</div>
-
-
-
-<!-- ========================================
-     STAGE 3
-======================================== -->
-
-<div
-  class="view view3">
-
-
-  <div class="viewLabel">
-    TOWARD THE SURFACE
-  </div>
-
-
-  <p class="gameGuide">
-
-    마지막으로 빛나는 한 마리를 선택해보세요
-
-  </p>
-
-
-  <div
-    class="fish f7"
-    data-word="도전">
-
-    <img
-      src="./f7.png"
-      alt="도전">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-
-  <div
-    class="fish f8"
-    data-word="창의성">
-
-    <img
-      src="./f8.png"
-      alt="창의성">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-
-  <div
-    class="fish f9"
-    data-word="끈기">
-
-    <img
-      src="./f9.png"
-      alt="끈기">
-
-    <span class="fin"></span>
-    <span class="fin2"></span>
-    <span class="spark"></span>
-
-  </div>
-
-</div>
-
-
-
-<!-- ========================================
-     기타 그래픽
-======================================== -->
-
-<div class="eyeView"></div>
-
-<div class="rainbow"></div>
-
-<div class="surface"></div>
-
-
-<div class="sparkles">
-
-  <i class="s1"></i>
-  <i class="s2"></i>
-  <i class="s3"></i>
-  <i class="s4"></i>
-  <i class="s5"></i>
-  <i class="s6"></i>
-
-</div>
-
-
-</div>
-
-
-<div class="center">
-
-  <button
-    class="btn"
-    id="reset">
-
-    다시 시작
-
-  </button>
-
-</div>
-
-
-</section>
-
-
-
-<!-- ========================================
-     POSSIBILITY
-======================================== -->
-
-<section
-  class="special"
-  id="possibility">
-
-
-<div class="card">
-
-
-  <div class="small">
-    YOUR POSSIBILITY
-  </div>
-
-
-  <p
-    class="possibilityWords"
-    id="chosenWords">
-
-    당신이 발견한 가능성
-
-  </p>
-
-
-  <p
-    class="quote"
-    id="quote">
-  </p>
-
-
-  <p
-    class="sub reminder"
-    id="possibilityReminder">
-
-    오늘 발견한 당신의 가능성을 기억해주세요.
-
-  </p>
-
-
-  <button
-    class="btn primary"
-    id="toRecord">
-
-    기록 남기기
-
-  </button>
-
-
-</div>
-
-</section>
-
-
-
-<!-- ========================================
-     RECORD
-======================================== -->
-
-<section
-  class="special"
-  id="recordScreen">
-
-
-<div class="card">
-
-
-  <div class="small">
-    LEAVE A RECORD
-  </div>
-
-
-  <h2
-    style="
-      font:400 clamp(24px,5vw,34px) Georgia,serif;
-      margin:0 0 12px
-    ">
-
-    오늘의 마음을 남겨주세요
-
-  </h2>
-
-
-  <p class="sub">
-
-    전시를 보며 느낀 점이나
-    오늘 발견한 가능성에 대한 생각을
-    자유롭게 기록해주세요.
-
-  </p>
-
-
-  <div
-    class="guest"
-    id="guest">
-
-
-    <iframe
-      src="https://docs.google.com/forms/d/e/1FAIpQLSfTWl4MC_0N4e-LBbkA-uBKWS4O9g_SHO1hdDieHoE4IF6P2g/viewform?embedded=true"
-      title="전시 감상 기록 남기기">
-    </iframe>
-
-
-    <div class="notice">
-
-      남겨주신 한마디는
-      전시 기록으로 소중히 보관됩니다.
+      </div>
 
     </div>
 
-
   </div>
-
-
-  <button
-    class="btn back"
-    id="backToPossibility">
-
-    가능성 화면으로
-
-  </button>
-
-
-  <button
-    class="btn back"
-    id="again">
-
-    처음부터 다시하기
-
-  </button>
-
 
 </div>
 
-</section>
-
-
 
 <script>
-
 
 /* ========================================
    기본 설정
 ======================================== */
 
-const allFish = [
-  ...document.querySelectorAll('.fish')
-];
+const startScreen =
+  document.getElementById("startScreen");
+
+const startButton =
+  document.getElementById("startButton");
 
 const game =
-  document.getElementById('game');
+  document.getElementById("game");
 
-const whiteFlash =
-  document.getElementById('whiteFlash');
+const stageTitle =
+  document.getElementById("stageTitle");
+
+const viewLabel =
+  document.getElementById("viewLabel");
+
+const gameGuide =
+  document.getElementById("gameGuide");
+
+const selectionMessage =
+  document.getElementById("selectionMessage");
+
+const recordScreen =
+  document.getElementById("recordScreen");
 
 
-/* ========================================
-   배경 이미지
-======================================== */
-
-const IMAGE_BASE_URL = './';
-const IMAGE_EXT = '.png';
-
-
-game.style.backgroundImage =
-  'linear-gradient(' +
-  '180deg,' +
-  'rgba(25,115,148,.025),' +
-  'rgba(2,18,43,.08)' +
-  '), url("' +
-  IMAGE_BASE_URL +
-  'bi' +
-  IMAGE_EXT +
-  '")';
-
-game.style.backgroundSize =
-  'cover, cover';
-
-game.style.backgroundPosition =
-  'center, center';
-
-game.style.backgroundRepeat =
-  'no-repeat, no-repeat';
-
+let currentStage = 1;
+let isSelecting = false;
 
 
 /* ========================================
-   물고기 접근성
+   시작하기
 ======================================== */
 
-document
-  .querySelectorAll('.fish')
-  .forEach((fish)=>{
+startButton.addEventListener("click", function(){
 
-    fish.setAttribute(
-      'role',
-      'button'
-    );
+  startScreen.style.opacity = "0";
+  startScreen.style.transform = "scale(1.03)";
 
-    fish.setAttribute(
-      'aria-label',
-      fish.dataset.word +
-      ' 물고기 선택'
-    );
+  setTimeout(function(){
 
-  });
+    startScreen.style.display = "none";
 
+    game.style.display = "block";
+
+  }, 700);
+
+});
 
 
 /* ========================================
-   화면 요소
+   단계 정보
 ======================================== */
 
-const progress =
-  document.getElementById('progress');
+const stages = {
 
-const stageNo =
-  document.getElementById('stageNo');
+  1:{
+    title:"빛을 따라",
+    english:"YOUR FIRST GAZE",
+    guide:"세 마리 중 마음이 가는 한 마리를 선택해보세요"
+  },
 
-const gameTitle =
-  document.getElementById('gameTitle');
+  2:{
+    title:"조금 더 가까이",
+    english:"A LITTLE CLOSER",
+    guide:"두 번째 시선이 머무는 한 마리를 선택해보세요"
+  },
 
-const views = [
-  ...document.querySelectorAll('.view')
-];
+  3:{
+    title:"수면을 향해",
+    english:"TOWARD THE SURFACE",
+    guide:"마지막으로 빛나는 한 마리를 선택해보세요"
+  }
 
+};
 
 
 /* ========================================
-   랜덤 문구
+   현재 단계 물고기
 ======================================== */
 
-const quotes = [
+function getCurrentFish(){
 
-  '당신 안의 작은 가능성들이 모여, 지금의 당신을 아름답게 빛냅니다.',
-
-  '당신은 이미 자신만의 색으로 충분히 빛나고 있습니다.',
-
-  '서로 다른 가능성을 품은 당신은 그 자체로 하나의 빛입니다.',
-
-  '당신 안에는 아직 발견되지 않은 빛이 가득합니다.',
-
-  '당신이 가진 가능성 하나하나가 모두 소중한 빛입니다.',
-
-  '당신은 수많은 가능성을 품고 있는 빛나는 사람입니다.',
-
-  '당신 안의 가능성들은 저마다 고유한 빛을 내고 있습니다.',
-
-  '당신이 가진 서로 다른 빛들이 모여 지금의 당신을 만듭니다.',
-
-  '당신은 이미 당신만의 가능성으로 반짝이고 있습니다.',
-
-  '당신 안에 있는 작은 가능성도 그 자체로 충분히 빛납니다.',
-
-  '당신의 용기와 열정은 이미 당신을 빛나게 하는 힘입니다.',
-
-  '당신은 스스로 알지 못하는 순간에도 자신만의 빛을 품고 있습니다.',
-
-  '당신 안의 수많은 가능성은 모두 당신을 이루는 아름다운 조각입니다.',
-
-  '당신이 가진 가능성은 다른 누구와도 다른 당신만의 빛입니다.',
-
-  '당신은 하나의 모습으로만 빛나는 사람이 아닙니다.',
-
-  '당신 안에는 서로 다른 색의 빛이 함께 살아가고 있습니다.',
-
-  '당신이 발견한 가능성마다 당신만의 빛이 담겨 있습니다.',
-
-  '당신은 이미 여러 가능성이 어우러진 하나의 아름다운 빛입니다.',
-
-  '당신의 작은 호기심조차 당신을 빛나게 하는 소중한 가능성입니다.',
-
-  '당신 안의 빛은 하나의 색으로 설명할 수 없을 만큼 다채롭습니다.',
-
-  '당신이 가진 가능성은 비교할 수 없는 당신만의 아름다움입니다.',
-
-  '당신은 지금 이 순간에도 무한한 가능성을 품고 있습니다.',
-
-  '당신 안의 모든 가능성은 저마다 빛날 가치가 있습니다.',
-
-  '당신은 스스로 생각하는 것보다 더 많은 빛을 품고 있습니다.',
-
-  '당신의 가능성은 서로 어우러져 지금 이 순간에도 반짝입니다.',
-
-  '당신은 이미 자신만의 색과 빛을 가진 소중한 존재입니다.',
-
-  '당신 안의 작은 빛들은 모자람 없이 저마다의 자리를 빛냅니다.',
-
-  '당신이 가진 가능성들은 모두 당신이라는 빛을 이루고 있습니다.',
-
-  '세 가지 가능성을 발견한 오늘, 당신 안의 다채로운 빛도 발견합니다.',
-
-  '당신 안의 모든 가능성이 모여, 오직 당신만이 만들어 낼 수 있는 빛이 됩니다.'
-
-];
-
-
-
-/* ========================================
-   게임 상태
-======================================== */
-
-let stage = 1;
-let words = [];
-let locked = false;
-
-
-
-/* ========================================
-   Ripple
-======================================== */
-
-function makeRipple(f){
-
-  const ripple =
-    document.createElement('span');
-
-  ripple.className =
-    'ripple';
-
-  ripple.style.left =
-    (
-      f.offsetLeft +
-      f.offsetWidth / 2 -
-      12
-    ) + 'px';
-
-  ripple.style.top =
-    (
-      f.offsetTop +
-      f.offsetHeight / 2 -
-      12
-    ) + 'px';
-
-  game.appendChild(ripple);
-
-  setTimeout(
-    ()=>ripple.remove(),
-    900
+  return game.querySelectorAll(
+    '.fish[data-stage="' + currentStage + '"]'
   );
 
 }
 
 
-
 /* ========================================
-   Stage
+   모든 물고기 가져오기
 ======================================== */
 
-function setStage(n){
-
-  stage = n;
-
-
-  game.classList.remove(
-    'stage-shift'
-  );
-
-  void game.offsetWidth;
-
-  game.classList.add(
-    'stage-shift'
-  );
-
-
-  setTimeout(
-    ()=>{
-      game.classList.remove(
-        'stage-shift'
-      );
-    },
-    1300
-  );
-
-
-  game.classList.remove(
-    'stage1',
-    'stage2',
-    'stage3'
-  );
-
-  game.classList.add(
-    'stage' + n
-  );
-
-
-  views.forEach(
-    (v,i)=>{
-
-      v.classList.toggle(
-        'active',
-        i === n - 1
-      );
-
-    }
-  );
-
-
-  progress.textContent =
-    n + ' / 3';
-
-  stageNo.textContent =
-    '0' + n;
-
-
-  if(n === 1){
-
-    gameTitle.textContent =
-      '빛을 따라';
-
-  }
-
-
-  if(n === 2){
-
-    gameTitle.textContent =
-      '조금 더 가까이';
-
-  }
-
-
-  if(n === 3){
-
-    gameTitle.textContent =
-      '수면을 향해';
-
-  }
-
-}
-
+const fishList =
+  document.querySelectorAll(".fish");
 
 
 /* ========================================
-   게임 종료
+   단계별 물고기 번호
 ======================================== */
 
-function finish(){
+const fishByStage = {
 
-  document
-    .getElementById('gameScreen')
-    .style.display = 'none';
+  1:[
+    document.querySelector(".f1"),
+    document.querySelector(".f2"),
+    document.querySelector(".f3")
+  ],
 
+  2:[
+    document.querySelector(".f4"),
+    document.querySelector(".f5"),
+    document.querySelector(".f6")
+  ],
 
-  document
-    .querySelector('.top')
-    .style.display = 'none';
+  3:[
+    document.querySelector(".f7"),
+    document.querySelector(".f8"),
+    document.querySelector(".f9")
+  ]
 
-
-  document
-    .getElementById('recordScreen')
-    .classList
-    .remove('active');
-
-
-  document
-    .getElementById('possibility')
-    .classList
-    .add('active');
-
-
-  document
-    .getElementById('chosenWords')
-    .textContent =
-    words.join(' · ');
-
-
-  document
-    .getElementById('quote')
-    .textContent =
-    quotes[
-      Math.floor(
-        Math.random() *
-        quotes.length
-      )
-    ];
-
-
-  window.scrollTo(0,0);
-
-
-  setTimeout(()=>{
-
-    whiteFlash
-      .classList
-      .add('fade-out');
-
-    whiteFlash
-      .classList
-      .remove('on');
-
-
-    setTimeout(
-      ()=>{
-        whiteFlash
-          .classList
-          .remove('fade-out');
-      },
-      1500
-    );
-
-  },250);
-
-}
-
+};
 
 
 /* ========================================
-   선택했어요 조사
+   올바른 조사
 ======================================== */
-
-/*
-  ★ '를'을 사용하는 단어
-*/
 
 const particleRo = [
-  '용기',
-  '의지',
-  '끈기'
+  "용기",
+  "의지",
+  "끈기"
 ];
-
-
-/*
-  나머지는 '을'
-*/
 
 function getSelectionMessage(word){
 
   const particle =
     particleRo.includes(word)
-      ? '를'
-      : '을';
+      ? "를"
+      : "을";
 
-  return (
-    '<strong>' +
-    word +
-    particle +
-    ' 선택했어요.</strong>'
-  );
+  return word + particle + " 선택했어요.";
 
 }
 
 
-
 /* ========================================
-   물고기 클릭
+   반짝이는 파티클
 ======================================== */
 
-allFish.forEach(
-  f => {
+function makeParticles(element){
 
-    f.onclick = ()=>{
+  const rect =
+    element.getBoundingClientRect();
 
-      if(
-        locked ||
-        !f
-          .closest('.view')
-          .classList
-          .contains('active')
-      ){
+  const gameRect =
+    game.getBoundingClientRect();
 
-        return;
+  const centerX =
+    rect.left - gameRect.left + rect.width / 2;
+
+  const centerY =
+    rect.top - gameRect.top + rect.height / 2;
+
+  for(let i = 0; i < 14; i++){
+
+    const particle =
+      document.createElement("span");
+
+    particle.className = "particle";
+
+    particle.style.left =
+      centerX + "px";
+
+    particle.style.top =
+      centerY + "px";
+
+    const dx =
+      (Math.random() - .5) * 150;
+
+    const dy =
+      -30 - Math.random() * 150;
+
+    particle.style.setProperty(
+      "--dx",
+      dx + "px"
+    );
+
+    particle.style.setProperty(
+      "--dy",
+      dy + "px"
+    );
+
+    game.appendChild(particle);
+
+    setTimeout(function(){
+      particle.remove();
+    }, 1300);
+
+  }
+
+}
+
+
+/* ========================================
+   단계 화면 변경
+======================================== */
+
+function setStage(stage){
+
+  currentStage = stage;
+
+  const info =
+    stages[stage];
+
+  stageTitle.textContent =
+    info.title;
+
+  viewLabel.textContent =
+    info.english;
+
+  gameGuide.textContent =
+    info.guide;
+
+  game.classList.remove(
+    "stage1",
+    "stage2",
+    "stage3"
+  );
+
+  game.classList.add(
+    "stage" + stage
+  );
+
+
+  /* 모든 물고기 숨기기 */
+
+  fishList.forEach(function(fish){
+
+    fish.style.display = "none";
+    fish.classList.remove(
+      "selected",
+      "dimmed"
+    );
+
+  });
+
+
+  /* 현재 단계 물고기만 보이기 */
+
+  fishByStage[stage].forEach(function(fish){
+
+    fish.style.display = "block";
+
+  });
+
+}
+
+
+/* ========================================
+   물고기 선택
+======================================== */
+
+fishList.forEach(function(fish){
+
+  fish.addEventListener("click", function(){
+
+    if(isSelecting){
+      return;
+    }
+
+    isSelecting = true;
+
+
+    const word =
+      fish.dataset.word;
+
+
+    /* 선택된 물고기 */
+
+    fish.classList.add("selected");
+
+
+    /* 나머지 물고기 흐리게 */
+
+    fishByStage[currentStage].forEach(
+      function(otherFish){
+
+        if(otherFish !== fish){
+
+          otherFish.classList.add("dimmed");
+
+        }
+
+      }
+    );
+
+
+    /* 반짝이 */
+
+    makeParticles(fish);
+
+
+    /* 선택 문구 */
+
+    selectionMessage.innerHTML =
+      "<strong>" +
+      getSelectionMessage(word) +
+      "</strong>";
+
+    selectionMessage.classList.add("show");
+
+
+    /* 단계가 넘어가기 전 잠시 보여주기 */
+
+    setTimeout(function(){
+
+      selectionMessage.classList.remove("show");
+
+    }, 1200);
+
+
+    /* 다음 단계 */
+
+    setTimeout(function(){
+
+      if(currentStage < 3){
+
+        setStage(currentStage + 1);
+
+        isSelecting = false;
+
+      }else{
+
+        /* 3단계가 끝나면 기록 화면 */
+
+        setTimeout(function(){
+
+          game.querySelectorAll(
+            ".stageHeader, .light, .fish, .gameGuide, .selectionMessage"
+          ).forEach(function(el){
+
+            el.style.display = "none";
+
+          });
+
+          recordScreen.style.display =
+            "block";
+
+          isSelecting = false;
+
+        }, 300);
 
       }
 
+    }, 1450);
 
-      locked = true;
+  });
 
-
-      f.classList.add(
-        'selected'
-      );
-
-
-      words.push(
-        f.dataset.word
-      );
-
-
-      makeRipple(f);
-
-
-      /*
-        ★ 선택 문구는 이제
-        각 단어에 맞는 조사를 자동 적용
-      */
-
-      /*
-        아래 메시지는 화면 하단에
-        표시하지 않도록 제거했습니다.
-      */
-
-
-      setTimeout(()=>{
-
-        f.classList.add(
-          'gone'
-        );
-
-
-        if(stage < 3){
-
-          setStage(
-            stage + 1
-          );
-
-          locked = false;
-
-        }
-
-        else{
-
-          whiteFlash
-            .classList
-            .remove('fade-out');
-
-          whiteFlash
-            .classList
-            .add('on');
-
-
-          setTimeout(
-            finish,
-            1650
-          );
-
-        }
-
-      },900);
-
-    };
-
-  }
-);
-
+});
 
 
 /* ========================================
-   기록 남기기
+   시작 단계
 ======================================== */
 
-document
-  .getElementById('toRecord')
-  .onclick = ()=>{
-
-    document
-      .getElementById('possibility')
-      .classList
-      .remove('active');
-
-
-    document
-      .getElementById('recordScreen')
-      .classList
-      .add('active');
-
-
-    window.scrollTo(0,0);
-
-  };
-
-
-
-/* ========================================
-   가능성 화면으로
-======================================== */
-
-document
-  .getElementById('backToPossibility')
-  .onclick = ()=>{
-
-    document
-      .getElementById('recordScreen')
-      .classList
-      .remove('active');
-
-
-    document
-      .getElementById('possibility')
-      .classList
-      .add('active');
-
-
-    window.scrollTo(0,0);
-
-  };
-
-
-
-/* ========================================
-   다시 시작
-======================================== */
-
-document
-  .getElementById('reset')
-  .onclick = ()=>{
-    location.reload();
-  };
-
-
-document
-  .getElementById('again')
-  .onclick = ()=>{
-    location.reload();
-  };
-
+setStage(1);
 
 </script>
-
-</main>
 
 </body>
 </html>
